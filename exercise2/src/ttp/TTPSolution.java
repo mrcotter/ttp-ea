@@ -3,6 +3,7 @@ package ttp;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +42,10 @@ public class TTPSolution {
     }
     
     public void print() {
-        System.out.println(wend+" "+wendUsed+" "+fp+" "+ftraw+" "+ft+" "+ob +" "+computationTime);
+        DecimalFormat df = new DecimalFormat("#.#####");
+        System.out.println("\nwend wendUsed fp ftraw ft ob computationTime");
+        System.out.println(df.format(wend) + " " + df.format(wendUsed) + " " +
+                df.format(fp) + " " + ftraw + " " + df.format(ft) + " " + df.format(ob) + " " + computationTime);
     }
     public void println() {
         this.print();
@@ -123,4 +127,23 @@ public class TTPSolution {
             }
     }
 
+    public void writeLog(String fileName) {
+        String log = "";
+        DecimalFormat df = new DecimalFormat("#.#####");
+
+        log += df.format(wend) + " " + df.format(wendUsed) + " " + df.format(fp)
+                + " " + ftraw + " " + df.format(ft) + " " + df.format(ob) + " " + computationTime + "\n\n";
+
+        String logFileName = fileName.split("\\.")[0] + ".LSH" + ".log";
+        BufferedWriter writer;
+        try {
+            writer = new BufferedWriter(new FileWriter(logFileName, true));
+            writer.write(log);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
