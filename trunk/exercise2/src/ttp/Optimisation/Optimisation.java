@@ -90,7 +90,7 @@ public class Optimisation {
                 case 3:
                     // Generate a random number of neighbours from 1 to 10.
                     Random rand = new Random();
-                    int numOfNeighbours = rand.nextInt(10)+1;
+                    int numOfNeighbours = rand.nextInt(5)+1;
 
                     for (int m = 0; m < numOfNeighbours; m++) {
 
@@ -153,7 +153,7 @@ public class Optimisation {
         int position;
 
         if (Math.random() > RATE) {
-
+            // Check if the packing plan can add item, if yes, add one; if no, remove one
             if (hasUnpackedItem(neighbour)) {
                 do {
                    position = (int) (Math.random() * neighbour.length);
@@ -167,7 +167,7 @@ public class Optimisation {
             }
 
         } else {
-
+            // The opposite
             if (hasPackedItem(neighbour)) {
                 do {
                     position = (int) (Math.random() * neighbour.length);
