@@ -2,10 +2,7 @@ package ttp.Optimisation;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -24,8 +21,10 @@ import ttp.Utils.DeepCopy;
  * @author wagner
  */
 public class Optimisation {
-    
-    
+
+    // Rate for randomly remove or insert an element from or to a packing plan
+    private static final double RATE = 0.5;
+
     public static TTPSolution hillClimber(TTPInstance instance, int[] tour, 
             int mode, 
             int durationWithoutImprovement, int maxRuntime) {
@@ -60,6 +59,7 @@ public class Optimisation {
             boolean flippedToZero = false;
             
             switch (mode) {
+                // RLS
                 case 1: 
                     // flip one bit
                     int position = (int)(Math.random()*newPackingPlan.length);
@@ -72,6 +72,7 @@ public class Optimisation {
                         newPackingPlan[position] = 1;
                     }
                     break;
+                // 1+1 EA
                 case 2:
                     // flip with probability 1/n
                     for (int j=0; j<packingPlan.length; j++) {
@@ -85,6 +86,26 @@ public class Optimisation {
                             }
                     }
                     break;
+                // Local Search Heuristic
+                case 3:
+                    // Generate a random number of neighbours from 1 to 10.
+                    Random rand = new Random();
+                    int numOfNeighbours = rand.nextInt(10)+1;
+
+                    for (int m = 0; m < numOfNeighbours; m++) {
+
+                        TTPSolution bestCandidateSolution = new TTPSolution(tour, newPackingPlan);
+                        instance.evaluate(bestCandidateSolution);
+
+                        // Generate a neighbour of this packing plan
+                        int[] candidate = generateNeighbour(newPackingPlan);
+                        TTPSolution candidateSolution = new TTPSolution(tour, candidate);
+                        instance.evaluate(candidateSolution);
+
+                        if (candidateSolution.ob > bestCandidateSolution.ob && candidateSolution.wend >= 0) {
+                            newPackingPlan = candidate;
+                        }
+                    }
             }
             
             
@@ -124,7 +145,71 @@ public class Optimisation {
         s.computationTime = duration;
         return s;
     }
-    
+
+    // Generates a new packing plan that is a neighbour of a given one.
+    private static int[] generateNeighbour(int[] PackingPlan) {
+
+        int[] neighbour = (int[]) DeepCopy.copy(PackingPlan);
+        int position;
+
+        if (Math.random() > RATE) {
+
+            if (hasUnpackedItem(neighbour)) {
+                do {
+                   position = (int) (Math.random() * neighbour.length);
+                } while (neighbour[position] == 1);
+                neighbour[position] = 1;
+            } else {
+                do {
+                    position = (int) (Math.random() * neighbour.length);
+                } while (neighbour[position] == 0);
+                neighbour[position] = 0;
+            }
+
+        } else {
+
+            if (hasPackedItem(neighbour)) {
+                do {
+                    position = (int) (Math.random() * neighbour.length);
+                } while (neighbour[position] == 0);
+                neighbour[position] = 0;
+            } else {
+                do {
+                    position = (int) (Math.random() * neighbour.length);
+                } while (neighbour[position] == 1);
+                neighbour[position] = 1;
+            }
+        }
+
+        return neighbour;
+    }
+
+    private static boolean hasPackedItem(int[] packingPlan) {
+        boolean packedItem = false;
+
+        for (int i: packingPlan) {
+            if (i == 1) {
+                packedItem = true;
+                break;
+            }
+        }
+
+        return packedItem;
+    }
+
+    private static boolean hasUnpackedItem(int[] packingPlan) {
+        boolean unpackedItem = false;
+
+        for (int i: packingPlan) {
+            if (i == 0) {
+                unpackedItem = true;
+                break;
+            }
+        }
+
+        return unpackedItem;
+    }
+
     public static int[] linkernTour(TTPInstance instance) {
         int[] result = new int[instance.numberOfNodes+1];
         

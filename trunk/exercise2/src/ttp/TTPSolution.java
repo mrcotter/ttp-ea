@@ -41,7 +41,7 @@ public class TTPSolution {
     }
     
     public void print() {
-        System.out.print(wend+" "+wendUsed+" "+fp+" "+ftraw+" "+ft+" "+ob +" "+computationTime);
+        System.out.println(wend+" "+wendUsed+" "+fp+" "+ftraw+" "+ft+" "+ob +" "+computationTime);
     }
     public void println() {
         this.print();
