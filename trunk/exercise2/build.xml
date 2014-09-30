@@ -34,8 +34,18 @@
 	</target>
 
 	<target name="run" depends="jar">
+		<property name="arg0" value="instances" />
+		<property name="arg1" value="a280_n279_bounded-strongly-corr_01.ttp" />
+		<property name="arg2" value="1" />
+		<property name="arg3" value="10000" />
+		<property name="arg4" value="60000" />
 		<java classname="Driver" fork="true">
 			<classpath path="${lib-dir}/ttp.jar" />
+			<arg value = "${arg0}" />
+			<arg value = "${arg1}" />
+			<arg value = "${arg2}" />
+			<arg value = "${arg3}" />
+			<arg value = "${arg4}" />
 		</java>
 	</target>
 
