@@ -90,7 +90,7 @@ public class Optimisation {
                 case 3:
                     // Generate a random number of neighbours from 1 to 10.
                     Random rand = new Random();
-                    int numOfNeighbours = rand.nextInt(5)+1;
+                    int numOfNeighbours = rand.nextInt(10) + 1;
 
                     for (int m = 0; m < numOfNeighbours; m++) {
 
@@ -140,23 +140,23 @@ public class Optimisation {
             i++;
             
         }
-        
+
         long duration = ttp.Utils.Utils.stopTiming();
         s.computationTime = duration;
         return s;
     }
 
     // Generates a new packing plan that is a neighbour of a given one.
-    private static int[] generateNeighbour(int[] PackingPlan) {
+    private static int[] generateNeighbour(int[] packingPlan) {
 
-        int[] neighbour = (int[]) DeepCopy.copy(PackingPlan);
+        int[] neighbour = (int[]) DeepCopy.copy(packingPlan);
         int position;
 
         if (Math.random() > RATE) {
             // Check if the packing plan can add item, if yes, add one; if no, remove one
             if (hasUnpackedItem(neighbour)) {
                 do {
-                   position = (int) (Math.random() * neighbour.length);
+                    position = (int) (Math.random() * neighbour.length);
                 } while (neighbour[position] == 1);
                 neighbour[position] = 1;
             } else {
@@ -180,6 +180,84 @@ public class Optimisation {
                 neighbour[position] = 1;
             }
         }
+
+        /*  ------------------ Local operation on permutations, Result not good --------------
+        // Generate a random number to choose which possible local operation to run
+        Random rand = new Random();
+        int possibleOperation = rand.nextInt(3) + 1;
+        //int possibleOperation = 2;
+        //System.out.println(possibleOperation);
+
+        int index_1, index_2;
+        int temp;
+
+        switch (possibleOperation) {
+            // Exchange
+            case 1:
+
+                do {
+                    Random rand_index = new Random();
+                    index_1 = rand_index.nextInt(neighbour.length);
+                    index_2 = rand_index.nextInt(neighbour.length);
+                } while (index_1 == index_2);
+
+                temp = neighbour[index_1];
+                neighbour[index_1] = neighbour[index_2];
+                neighbour[index_2] = temp;
+
+                break;
+
+            // Jump
+            case 2:
+
+                do {
+                    Random rand_index = new Random();
+                    index_1 = rand_index.nextInt(neighbour.length);
+                    index_2 = rand_index.nextInt(neighbour.length);
+                } while (index_1 == index_2);
+
+                if (index_1 < index_2) {
+                    temp = neighbour[index_1];
+
+                    System.arraycopy(neighbour, index_1 + 1, neighbour, index_1, index_2 - index_1);
+
+                    neighbour[index_2] = temp;
+                } else {
+                    temp = neighbour[index_1];
+
+                    System.arraycopy(neighbour, index_2, neighbour, index_2 + 1, index_1 - index_2);
+
+                    neighbour[index_2] = temp;
+                }
+
+                break;
+
+            // Inversion
+            case 3:
+
+                do {
+                    Random rand_index = new Random();
+                    index_1 = rand_index.nextInt(neighbour.length);
+                    index_2 = rand_index.nextInt(neighbour.length);
+                } while (index_1 == index_2);
+
+                int lower_index = Math.min(index_1, index_2);
+                int bigger_index = Math.max(index_1, index_2);
+
+                //Do invert the sub elements among these two indices
+                while (lower_index <= bigger_index) {
+                    temp = neighbour[lower_index];
+                    neighbour[lower_index] = neighbour[bigger_index];
+                    neighbour[bigger_index] = temp;
+
+                    lower_index++;
+                    bigger_index--;
+                }
+
+                break;
+
+        }
+        */
 
         return neighbour;
     }
