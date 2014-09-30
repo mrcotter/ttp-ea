@@ -55,7 +55,7 @@ public class Optimisation {
                 System.out.println(" i="+i+"("+counter+") bestObjective="+bestObjective); 
             }
             int[] newPackingPlan = (int[])DeepCopy.copy(packingPlan);
-            
+
             boolean flippedToZero = false;
             
             switch (mode) {
@@ -86,19 +86,27 @@ public class Optimisation {
                             }
                     }
                     break;
-                // Local Search Heuristic
+                // Local Search (Local operations on permutations)
                 case 3:
+                    // Initialise a random packing plan instead of all 0
+                    for (int j=0; j < newPackingPlan.length; j++) {
+                        if (Math.random() < 1d/packingPlan.length) {
+                            newPackingPlan[j] = 1;
+                        }
+                    }
+
                     // Generate a random number of neighbours from 1 to 10.
                     Random rand = new Random();
                     int numOfNeighbours = rand.nextInt(10) + 1;
 
                     for (int m = 0; m < numOfNeighbours; m++) {
-
+                        // Evaluate possible best packing plan
                         TTPSolution bestCandidateSolution = new TTPSolution(tour, newPackingPlan);
                         instance.evaluate(bestCandidateSolution);
 
                         // Generate a neighbour of this packing plan
                         int[] candidate = generateNeighbour(newPackingPlan);
+                        // Evaluate neighbour
                         TTPSolution candidateSolution = new TTPSolution(tour, candidate);
                         instance.evaluate(candidateSolution);
 
@@ -150,42 +158,10 @@ public class Optimisation {
     private static int[] generateNeighbour(int[] packingPlan) {
 
         int[] neighbour = (int[]) DeepCopy.copy(packingPlan);
-        int position;
 
-        if (Math.random() > RATE) {
-            // Check if the packing plan can add item, if yes, add one; if no, remove one
-            if (hasUnpackedItem(neighbour)) {
-                do {
-                    position = (int) (Math.random() * neighbour.length);
-                } while (neighbour[position] == 1);
-                neighbour[position] = 1;
-            } else {
-                do {
-                    position = (int) (Math.random() * neighbour.length);
-                } while (neighbour[position] == 0);
-                neighbour[position] = 0;
-            }
-
-        } else {
-            // The opposite
-            if (hasPackedItem(neighbour)) {
-                do {
-                    position = (int) (Math.random() * neighbour.length);
-                } while (neighbour[position] == 0);
-                neighbour[position] = 0;
-            } else {
-                do {
-                    position = (int) (Math.random() * neighbour.length);
-                } while (neighbour[position] == 1);
-                neighbour[position] = 1;
-            }
-        }
-
-        /*  ------------------ Local operation on permutations, Result not good --------------
-        // Generate a random number to choose which possible local operation to run
+        // Generate a random number to choose which local operation to run
         Random rand = new Random();
         int possibleOperation = rand.nextInt(3) + 1;
-        //int possibleOperation = 2;
         //System.out.println(possibleOperation);
 
         int index_1, index_2;
@@ -201,6 +177,7 @@ public class Optimisation {
                     index_2 = rand_index.nextInt(neighbour.length);
                 } while (index_1 == index_2);
 
+                // Swap two elements
                 temp = neighbour[index_1];
                 neighbour[index_1] = neighbour[index_2];
                 neighbour[index_2] = temp;
@@ -216,18 +193,19 @@ public class Optimisation {
                     index_2 = rand_index.nextInt(neighbour.length);
                 } while (index_1 == index_2);
 
+                // Jump element at index_1 and shift other elements
                 if (index_1 < index_2) {
-                    temp = neighbour[index_1];
 
+                    temp = neighbour[index_1];
                     System.arraycopy(neighbour, index_1 + 1, neighbour, index_1, index_2 - index_1);
-
                     neighbour[index_2] = temp;
+
                 } else {
+
                     temp = neighbour[index_1];
-
                     System.arraycopy(neighbour, index_2, neighbour, index_2 + 1, index_1 - index_2);
-
                     neighbour[index_2] = temp;
+
                 }
 
                 break;
@@ -255,38 +233,11 @@ public class Optimisation {
                 }
 
                 break;
-
         }
-        */
 
         return neighbour;
     }
 
-    private static boolean hasPackedItem(int[] packingPlan) {
-        boolean packedItem = false;
-
-        for (int i: packingPlan) {
-            if (i == 1) {
-                packedItem = true;
-                break;
-            }
-        }
-
-        return packedItem;
-    }
-
-    private static boolean hasUnpackedItem(int[] packingPlan) {
-        boolean unpackedItem = false;
-
-        for (int i: packingPlan) {
-            if (i == 0) {
-                unpackedItem = true;
-                break;
-            }
-        }
-
-        return unpackedItem;
-    }
 
     public static int[] linkernTour(TTPInstance instance) {
         int[] result = new int[instance.numberOfNodes+1];
