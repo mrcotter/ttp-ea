@@ -134,7 +134,7 @@ public class TTPSolution {
         log += df.format(wend) + " " + df.format(wendUsed) + " " + df.format(fp)
                 + " " + ftraw + " " + df.format(ft) + " " + df.format(ob) + " " + computationTime + "\n\n";
 
-        String logFileName = fileName.split("\\.")[0] + ".RLS" + ".log";
+        String logFileName = fileName.split("\\.")[0] + ".LS-P" + ".log";
         BufferedWriter writer;
         try {
             writer = new BufferedWriter(new FileWriter(logFileName, true));
