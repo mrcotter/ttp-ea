@@ -29,7 +29,7 @@ public class Driver {
     public static void main(String[] args) {
        
         if (args.length==0) 
-             args = new String[]{"instances", "fnl4461_n44600_uncorr_10.ttp", // to do all 10 instances (several files match the pattern)
+             args = new String[]{"instances", "a280_n279_bounded-strongly-corr_01.ttp", // to do all 10 instances (several files match the pattern)
 //            args = new String[]{"instances", "a280_n1395_bounded-strongly-corr_10.ttp", // to do just this 1 instance
             //args = new String[]{"instances", "fnl4461_n4460_bounded-strongly-corr_01.ttp", // to do just this 1 instance
 //            args = new String[]{"instances", "pla33810_n338090_uncorr_10.ttp", // to do just this 1 instance
@@ -58,7 +58,7 @@ public class Driver {
             TTPInstance instance = new TTPInstance(f);
 
             long startTime = System.currentTimeMillis();
-            String resultTitle = instance.file.getName() + ".LSH." + startTime;
+            String resultTitle = instance.file.getName() + ".RLS." + startTime;
 
             // generate a Linkern tour (or read it if it already exists)
             int[] tour = Optimisation.linkernTour(instance);

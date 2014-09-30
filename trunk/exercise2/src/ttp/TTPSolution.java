@@ -85,32 +85,32 @@ public class TTPSolution {
      *           Note that this format can easily be achieved in Java with the function Arrays.toString(...). 
      */
     private String answer() {
-    	int[] tourOut = new int[tspTour.length - 1];
-    	for (int i = 0; i < tspTour.length - 1; i++){
-    		tourOut[i] = tspTour[i] + 1;
-    	}
-    	
-    	int itemsPerCity = packingPlan.length / (tspTour.length  -2);
-    	
-    	List<Integer> packingPlanList = new ArrayList<Integer>();
-    	int packingPlanIndex = 0;
-    	for (int i = 1; i < tspTour.length - 1; i++){
-    		int city = tspTour[i];
-    		for (int j = 0; j < itemsPerCity; j++){
-    			if (packingPlan[packingPlanIndex] == 1){
-    				int itemIndex = j * (tspTour.length  -2) + city - 1;
-    				int itemIndexFrom1 = itemIndex + 1;
-    				packingPlanList.add(itemIndexFrom1 );
-    			}
-    			packingPlanIndex++;
-    		}	    	
-    	}   	
-    	Collections.sort(packingPlanList);
-    	
-    	int[] packingOut = new int[packingPlanList.size()];
-    	for (int i = 0; i < packingPlanList.size(); i++){
-    		packingOut[i] = packingPlanList.get(i);
-    	}
+        int[] tourOut = new int[tspTour.length - 1];
+        for (int i = 0; i < tspTour.length - 1; i++){
+            tourOut[i] = tspTour[i] + 1;
+        }
+        
+        int itemsPerCity = packingPlan.length / (tspTour.length  -2);
+        
+        List<Integer> packingPlanList = new ArrayList<Integer>();
+        int packingPlanIndex = 0;
+        for (int i = 1; i < tspTour.length - 1; i++){
+            int city = tspTour[i];
+            for (int j = 0; j < itemsPerCity; j++){
+                if (packingPlan[packingPlanIndex] == 1){
+                    int itemIndex = j * (tspTour.length  -2) + city - 1;
+                    int itemIndexFrom1 = itemIndex + 1;
+                    packingPlanList.add(itemIndexFrom1 );
+                }
+                packingPlanIndex++;
+            }           
+        }       
+        Collections.sort(packingPlanList);
+        
+        int[] packingOut = new int[packingPlanList.size()];
+        for (int i = 0; i < packingPlanList.size(); i++){
+            packingOut[i] = packingPlanList.get(i);
+        }
         return Arrays.toString(tourOut) + "\n" + Arrays.toString(packingOut) +  "\n";
     }
     
@@ -134,7 +134,7 @@ public class TTPSolution {
         log += df.format(wend) + " " + df.format(wendUsed) + " " + df.format(fp)
                 + " " + ftraw + " " + df.format(ft) + " " + df.format(ob) + " " + computationTime + "\n\n";
 
-        String logFileName = fileName.split("\\.")[0] + ".LSH" + ".log";
+        String logFileName = fileName.split("\\.")[0] + ".RLS" + ".log";
         BufferedWriter writer;
         try {
             writer = new BufferedWriter(new FileWriter(logFileName, true));
