@@ -15,7 +15,8 @@
 
 	<target name="compile" depends="init">
 		<javac srcdir="${src-dir}"
-			destdir="${obj-dir}" />
+			destdir="${obj-dir}"
+			includeantruntime="false" />
 	</target>
 
 	<target name="clean-compile">
