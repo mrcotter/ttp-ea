@@ -13,67 +13,61 @@ import ttp.TTPSolution;
 
 public class TSP {
 	
-	private ArrayList<ArrayList<Integer>> MultiTours;
-	private ArrayList<Integer> SingleTour = new ArrayList<Integer>();
+	private ArrayList<ArrayList<Integer>> multiTours;
+	private ArrayList<Integer> singleTour = new ArrayList<Integer>();
 	private ArrayList<ArrayList<Integer>> offsprings = new ArrayList<ArrayList<Integer>>();
 	private TTPInstance instance;
 	public long Distance_1 = 0, Distance_2 = 0;
 		
-	public TSP(TTPInstance instance, int[] tour){
+	public TSP(TTPInstance instance, int[] tour) {
 		
 		this.instance = instance;
 		 
-		for(int i = 1; i<tour.length - 1; i++)
-		{
-			SingleTour.add(tour[i]);
+		for (int i = 1; i<tour.length - 1; i++) {
+            singleTour.add(tour[i]);
 		}
 		
-		Distance_1 = totalDistance(SingleTour);
+		Distance_1 = totalDistance(singleTour);
 			
 	}
 	
-	public int[] RunEA(int PopSize, double cross_rate, double mut_rate, int NumOfGenerations)
-	{
-		ArrayList<Integer> Temp;
-		Population(PopSize, true);
+	public int[] runEA(int popSize, double cross_rate, double mut_rate, int numOfGenerations) {
+		ArrayList<Integer> temp;
+		Population(popSize, true);
 		
-		for(int i = 0; i < NumOfGenerations; i++)
-		{
-			MultiTours = EA(MultiTours, cross_rate, mut_rate);
+		for (int i = 0; i < numOfGenerations; i++) {
+            multiTours = EA(multiTours, cross_rate, mut_rate);
 		}
+
+        temp = findShorest(multiTours);
 		
-		Temp = FindShorest(MultiTours);
-		
-		int[] Shorest = new int[Temp.size()+2];
+		int[] shorest = new int[temp.size()+2];
 		
 		int j = 1;
+
+        for (Integer aTemp : temp) {
+
+            shorest[j] = aTemp;
+            j++;
+        }
 		
-		for(int i = 0; i<Temp.size(); i++){
-			
-			Shorest[j] = Temp.get(i);
-			j++;		
-		}
-		
-		Distance_2 = totalDistance(Temp);
-		
-		
-		return Shorest;
+		Distance_2 = totalDistance(temp);
+
+		return shorest;
 	}
 	
 	
-	private ArrayList<ArrayList<Integer>> EA(ArrayList<ArrayList<Integer>> pop, double cross_rate, double mut_rate)
-	{
+	private ArrayList<ArrayList<Integer>> EA(ArrayList<ArrayList<Integer>> pop, double cross_rate, double mut_rate) {
 		ArrayList<ArrayList<Integer>> NextGeneration = new ArrayList<ArrayList<Integer>>(pop.size());
 		ArrayList<Integer> parent1;
 		ArrayList<Integer> parent2;
 		
-		for(int j = 0; j < pop.size(); j++)
-		{
+		for(int j = 0; j < pop.size(); j++) {
 			parent1 = Selection_Tournament(5, pop);
 			parent2 = Selection_Tournament(5, pop);
 			
 			if(Math.random() <= cross_rate){
-				HashMap<Integer, Integer> lookup_table = new HashMap<Integer, Integer>(SingleTour.size());
+				HashMap<Integer, Integer> lookup_table = new HashMap<Integer, Integer>(singleTour.size());
 				ArrayList<ArrayList<Integer>> tours = pop;
 				
 				for(int i : tours.get(0))
@@ -87,7 +81,7 @@ public class TSP {
 				NextGeneration.add(offsprings.get(0));
 				NextGeneration.add(offsprings.get(1));
 				
-			}else{
+			} else {
 				NextGeneration.add(parent1);
 				NextGeneration.add(parent2);		
 			}
@@ -108,16 +102,15 @@ public class TSP {
 	}
 	
 	
-	private void Population(int PopSize, boolean ifInitial ){
+	private void Population(int popSize, boolean ifInitial ){
 		
-		MultiTours = new ArrayList<ArrayList<Integer>>(PopSize);
+		multiTours = new ArrayList<ArrayList<Integer>>(popSize);
 		
-		if(ifInitial == true){
+		if(ifInitial) {
 			
-			for(int i = 0; i < PopSize; i++)
-			{
-				MultiTours.add(SingleTour);
-				CreateARandomTour();				
+			for(int i = 0; i < popSize; i++) {
+                multiTours.add(singleTour);
+				createARandomTour();
 			}
 					
 		}
@@ -125,9 +118,9 @@ public class TSP {
 	}
 	
 	
-	private void CreateARandomTour(){
+	private void createARandomTour(){
 		
-		Collections.shuffle(SingleTour);
+		Collections.shuffle(singleTour);
 	}
 	
 	
@@ -155,12 +148,11 @@ public class TSP {
 			{
 				temp.add(tour.get(j));
 			}
-			
-			for(int j = 0; j < temp.size(); j++)
-			{
-				tour.set(temp_num, temp.get(j));
-				temp_num--;
-			}
+
+            for (Integer aTemp : temp) {
+                tour.set(temp_num, aTemp);
+                temp_num--;
+            }
 		}
 		
 		if(RandomPos_1 < RandomPos_2)
@@ -171,17 +163,16 @@ public class TSP {
 			{
 				temp.add(tour.get(j));
 			}
-			
-			for(int j = 0; j < temp.size(); j++)
-			{
-				tour.set(temp_num, temp.get(j));
-				temp_num--;
-			}
+
+            for (Integer aTemp : temp) {
+                tour.set(temp_num, aTemp);
+                temp_num--;
+            }
 		}
 
 	}
 	
-	private void Crossover_Edge_Recombination(ArrayList<Integer> P1, ArrayList<Integer> P2, HashMap<Integer, Integer> LookUp_Table){
+	private void Crossover_Edge_Recombination(ArrayList<Integer> P1, ArrayList<Integer> P2, HashMap<Integer, Integer> LookUp_Table) {
 		
 		//Create the edge map
         HashMap<Integer, HashSet<Integer>> edgeMap = new HashMap<Integer, HashSet<Integer>>();
@@ -256,7 +247,7 @@ public class TSP {
 	}
 	
 	
-	private ArrayList<Integer> Selection_Tournament(int tournament_size, ArrayList<ArrayList<Integer>> pop){
+	private ArrayList<Integer> Selection_Tournament(int tournament_size, ArrayList<ArrayList<Integer>> pop) {
 		
 		ArrayList<ArrayList<Integer>> Tournament_Select = new ArrayList<ArrayList<Integer>>();
 		
@@ -265,15 +256,12 @@ public class TSP {
 			int random_Tour = (int) (Math.random() * pop.size());
 			Tournament_Select.add(pop.get(random_Tour));
 		}
-		
-		ArrayList<Integer> Shorest = FindShorest(Tournament_Select);
-		
-		return Shorest;
+
+        return findShorest(Tournament_Select);
 	}
 	
 	
-	private HashSet<Integer> getEdges(ArrayList<Integer> P1, ArrayList<Integer> P2, int index_1, int index_2)
-	{
+	private HashSet<Integer> getEdges(ArrayList<Integer> P1, ArrayList<Integer> P2, int index_1, int index_2) {
 		HashSet<Integer> edges = new HashSet<Integer>();
 		int size = P1.size();
 		
@@ -398,25 +386,22 @@ public class TSP {
     }
 	
 	
-	private ArrayList<Integer> FindShorest(ArrayList<ArrayList<Integer>> tour){
+	private ArrayList<Integer> findShorest(ArrayList<ArrayList<Integer>> tour){
 		
 		ArrayList<Integer> Shorest = tour.get(0);
-		
-		for(int i = 0; i < tour.size(); i++)
-		{
-			if(totalDistance(Shorest) > totalDistance(tour.get(i)))
-			{
-				Shorest = tour.get(i);
-			}
-		}
+
+        for (ArrayList<Integer> aTour : tour) {
+            if (totalDistance(Shorest) > totalDistance(aTour)) {
+                Shorest = aTour;
+            }
+        }
 		
 		
 		return Shorest;
 	}
 	
 	
-	public long totalDistance(ArrayList<Integer> tour)
-	{
+	public long totalDistance(ArrayList<Integer> tour) {
 		long Distance = 0;
 		
 		for(int i = 0; i < tour.size() - 1; i++)
@@ -425,14 +410,10 @@ public class TSP {
 			int h= (i+1)%(tour.size()-1);
 			Distance = Distance+ (long)Math.ceil(instance.distances(tour.get(i),tour.get(h)));
 		}
-		
-		
+
 		return Distance;
 	}
 
-		
-	
-	
 	
 
 }
