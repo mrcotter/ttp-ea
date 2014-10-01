@@ -29,6 +29,18 @@ public class TSP {
 			
 	}
 	
+	public void Driver(int PopSize, double cross_rate, double mut_rate, int NumOfGenerations)
+	{
+		Population(PopSize, true);
+		
+		for(int i = 0; i < NumOfGenerations; i++)
+		{
+			MultiTours = EA(MultiTours, cross_rate, mut_rate);
+		}
+		
+				
+	}
+	
 	
 	private ArrayList<ArrayList<Integer>> EA(ArrayList<ArrayList<Integer>> pop, double cross_rate, double mut_rate)
 	{
