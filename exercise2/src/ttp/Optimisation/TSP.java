@@ -17,20 +17,24 @@ public class TSP {
 	private ArrayList<Integer> SingleTour = new ArrayList<Integer>();
 	private ArrayList<ArrayList<Integer>> offsprings = new ArrayList<ArrayList<Integer>>();
 	private TTPInstance instance;
+	public long Distance_1 = 0, Distance_2 = 0;
 		
-	public TSP(TTPInstance instance, TTPSolution solution){
+	public TSP(TTPInstance instance, int[] tour){
 		
 		this.instance = instance;
 		 
-		for(int i = 0; i<solution.tspTour.length - 1; i++)
+		for(int i = 1; i<tour.length - 1; i++)
 		{
-			SingleTour.add(solution.tspTour[i]);
+			SingleTour.add(tour[i]);
 		}
+		
+		Distance_1 = totalDistance(SingleTour);
 			
 	}
 	
-	public void Driver(int PopSize, double cross_rate, double mut_rate, int NumOfGenerations)
+	public int[] RunEA(int PopSize, double cross_rate, double mut_rate, int NumOfGenerations)
 	{
+		ArrayList<Integer> Temp;
 		Population(PopSize, true);
 		
 		for(int i = 0; i < NumOfGenerations; i++)
@@ -38,7 +42,22 @@ public class TSP {
 			MultiTours = EA(MultiTours, cross_rate, mut_rate);
 		}
 		
-				
+		Temp = FindShorest(MultiTours);
+		
+		int[] Shorest = new int[Temp.size()+2];
+		
+		int j = 1;
+		
+		for(int i = 0; i<Temp.size(); i++){
+			
+			Shorest[j] = Temp.get(i);
+			j++;		
+		}
+		
+		Distance_2 = totalDistance(Temp);
+		
+		
+		return Shorest;
 	}
 	
 	
@@ -396,7 +415,7 @@ public class TSP {
 	}
 	
 	
-	private long totalDistance(ArrayList<Integer> tour)
+	public long totalDistance(ArrayList<Integer> tour)
 	{
 		long Distance = 0;
 		
@@ -404,7 +423,7 @@ public class TSP {
 		{
 			//h: next tour city index
 			int h= (i+1)%(tour.size()-1);
-			Distance = (long)Math.ceil(instance.distances(tour.get(i),tour.get(h)));
+			Distance = Distance+ (long)Math.ceil(instance.distances(tour.get(i),tour.get(h)));
 		}
 		
 		
