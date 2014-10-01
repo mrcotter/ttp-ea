@@ -58,7 +58,7 @@ public class Driver {
             TTPInstance instance = new TTPInstance(f);
 
             long startTime = System.currentTimeMillis();
-            String resultTitle = instance.file.getName() + ".RLS." + startTime;
+            String resultTitle = instance.file.getName() + ".LS-P." + startTime;
 
             // generate a Linkern tour (or read it if it already exists)
             int[] tour = Optimisation.linkernTour(instance);

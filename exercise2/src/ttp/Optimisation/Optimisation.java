@@ -104,8 +104,11 @@ public class Optimisation {
                         TTPSolution bestCandidateSolution = new TTPSolution(tour, newPackingPlan);
                         instance.evaluate(bestCandidateSolution);
 
-                        // Generate a neighbour of this packing plan
-                        int[] candidate = generateNeighbour(newPackingPlan);
+                        // Generate a neighbour of this packing plan with a random number to choose which local operation to run
+                        Random r = new Random();
+                        int possibleOperation = r.nextInt(3) + 1;
+                        //System.out.println(possibleOperation);
+                        int[] candidate = generateNeighbour(newPackingPlan, possibleOperation);
                         // Evaluate neighbour
                         TTPSolution candidateSolution = new TTPSolution(tour, candidate);
                         instance.evaluate(candidateSolution);
@@ -155,14 +158,9 @@ public class Optimisation {
     }
 
     // Generates a new packing plan that is a neighbour of a given one.
-    private static int[] generateNeighbour(int[] packingPlan) {
+    private static int[] generateNeighbour(int[] packingPlan, int possibleOperation) {
 
         int[] neighbour = (int[]) DeepCopy.copy(packingPlan);
-
-        // Generate a random number to choose which local operation to run
-        Random rand = new Random();
-        int possibleOperation = rand.nextInt(3) + 1;
-        //System.out.println(possibleOperation);
 
         int index_1, index_2;
         int temp;
