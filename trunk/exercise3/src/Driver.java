@@ -33,7 +33,7 @@ public class Driver {
 //            args = new String[]{"instances", "a280_n1395_bounded-strongly-corr_10.ttp", // to do just this 1 instance
             //args = new String[]{"instances", "fnl4461_n4460_bounded-strongly-corr_01.ttp", // to do just this 1 instance
 //            args = new String[]{"instances", "pla33810_n338090_uncorr_10.ttp", // to do just this 1 instance
-            "3", "10000", "600000"};
+            "1", "10000", "600000"};
 //        ttp.Optimisation.Optimisation.doAllLinkernTours();
 //        runSomeTests();
         doBatch(args);
@@ -62,6 +62,7 @@ public class Driver {
 
             // generate a Linkern tour (or read it if it already exists)
             int[] tour = Optimisation.linkernTour(instance);
+            instance.generateTourList(tour);
 
             System.out.print(f.getName()+": ");
 
