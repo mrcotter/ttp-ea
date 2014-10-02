@@ -29,7 +29,7 @@ public class Driver {
      */
 
     private static final int POP_SIZE = 20;
-    private static final int GENERATIONS = 1000;
+    private static final int GENERATIONS = 10000;
     private static final double CROSS_RATE = 0.5;
     private static final double MUTATION_RATE = 0.05;
 
