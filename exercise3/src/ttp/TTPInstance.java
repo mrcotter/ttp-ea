@@ -30,10 +30,9 @@ public class TTPInstance {
     public String edgeWeightType;
     public double[][] nodes;
     public int[][] items;
-
-    public ArrayList<Node> tourList;
     
     public File file;
+    public ArrayList<Node> tourList;
     
     /* Constructor 
      * reads the instance from the file
@@ -96,7 +95,6 @@ public class TTPInstance {
                     this.edgeWeightType = line;
                 }
                 if (line.startsWith("NODE_COORD_SECTION")) {
-
                     this.nodes = new double[this.numberOfNodes][3];
                     for (int i=0; i<this.numberOfNodes; i++) {
                         line = br.readLine();
@@ -105,7 +103,7 @@ public class TTPInstance {
                             double temp = Double.parseDouble(splittedLine[j]);
 //                            int temp = Integer.parseInt(splittedLine[j]);
                             // adjust city number by 1
-                            if (j==0) temp = temp-1;
+                            if (j==0) temp =  temp-1;
                             this.nodes[i][j] = temp;
                         }
                     }
@@ -193,6 +191,9 @@ public class TTPInstance {
          * 
          */
         int itemsPerCity = solution.packingPlan.length / (solution.tspTour.length-2);
+        //System.out.println(solution.packingPlan.length+" "+solution.tspTour.length);
+        
+        
         if (debugPrint) System.out.println("itemsPerCity="+itemsPerCity+" solution.tspTour.length="+solution.tspTour.length);
        
 //        for (int i=0; i<tour.length; i++) {
@@ -367,18 +368,16 @@ public class TTPInstance {
             System.out.println("---- TTP Instance END ----");
         }
     }
-
+    
     public void generateTourList(int[] tour) {
 
-        //System.out.println(tour.length);
-
         tourList = new ArrayList<Node>(tour.length);
-
-        for (int nodeID : tour) {
-            Node node = new Node(nodeID);
-            tourList.add(node);
+        
+        for(int i = 0; i < tour.length-1; i++)
+        {
+        	Node node = new Node(tour[i]);
+        	tourList.add(node);
         }
 
-        //System.out.println(tourList.toString());
     }
 }
