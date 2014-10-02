@@ -34,10 +34,12 @@ public class TSP {
 		generatePopulation(popSize, true);
 
         //System.out.println(multiTours.size());
+        //System.out.println("initial tour: " + totalDistance(singleTour));
 
         multiTours = GA(multiTours, cross_rate, mut_rate);
         best = findShortest(multiTours);
         bestDistance = totalDistance(best);
+
 
         //System.out.println(multiTours.size());
 		
@@ -54,6 +56,8 @@ public class TSP {
 
             //System.out.println(multiTours.size() + "\n");
 		}
+
+        //System.out.println("best tour: " + totalDistance(best));
 
 		int[] shortest = new int[best.size()];
 
