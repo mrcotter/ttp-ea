@@ -375,8 +375,7 @@ public class TTPInstance {
         tourList = new ArrayList<Node>(tour.length);
 
         for (int nodeID : tour) {
-            double position[] = new double[]{this.nodes[nodeID][1], this.nodes[nodeID][2]};
-            Node node = new Node(nodeID, position);
+            Node node = new Node(nodeID);
             tourList.add(node);
         }
 
