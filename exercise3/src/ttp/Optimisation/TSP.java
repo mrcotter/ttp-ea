@@ -11,8 +11,8 @@ public class TSP {
 	
 	private ArrayList<ArrayList<Node>> multiTours;
 	private ArrayList<Node> singleTour;
-    ArrayList<ArrayList<Node>> nextGeneration;
-	private ArrayList<ArrayList<Node>> offsprings;
+
+	private ArrayList<ArrayList<Node>> offsprings = new ArrayList<ArrayList<Node>>();
 
 	private TTPInstance instance;
 	public double Distance_1 = 0.0, Distance_2 = 0.0;
@@ -23,22 +23,27 @@ public class TSP {
 		this.instance = instance;
         singleTour = instance.tourList;
 
-        offsprings = new ArrayList<ArrayList<Node>>();
 		//Distance_1 = totalDistance(singleTour);
 	}
 
 	
-	public int[] runGA(int popSize, int numOfGenerations, double cross_rate, double mut_rate) {
+	public int[] runGA(int popSize, int generations, double cross_rate, double mut_rate) {
 
 		ArrayList<Node> temp, best;
         double tempDistance, bestDistance;
 		generatePopulation(popSize, true);
 
+        //System.out.println(multiTours.size());
+
         multiTours = GA(multiTours, cross_rate, mut_rate);
         best = findShortest(multiTours);
         bestDistance = totalDistance(best);
+
+        //System.out.println(multiTours.size());
 		
-		for (int i = 1; i < numOfGenerations; i++) {
+		for (int i = 1; i < generations; i++) {
+
+            //System.out.println("generation: " + i);
             multiTours = GA(multiTours, cross_rate, mut_rate);
             temp = findShortest(multiTours);
             tempDistance = totalDistance(temp);
@@ -47,7 +52,7 @@ public class TSP {
                 best = temp;
             }
 
-            //clearPreviousGeneration();
+            //System.out.println(multiTours.size() + "\n");
 		}
 
 		int[] shortest = new int[best.size()];
@@ -63,20 +68,19 @@ public class TSP {
 		return shortest;
 	}
 
-    private void clearPreviousGeneration() {
-        nextGeneration.clear();
-    }
-
-
     private ArrayList<ArrayList<Node>> GA(ArrayList<ArrayList<Node>> pop, double cross_rate, double mut_rate) {
 
-        nextGeneration = new ArrayList<ArrayList<Node>>();
+        //System.out.println(pop.size());
+
+        ArrayList<ArrayList<Node>> nextGeneration = new ArrayList<ArrayList<Node>>(pop.size());
 		ArrayList<Node> parent1;
 		ArrayList<Node> parent2;
 
         int popSize = pop.size();
+
+        //System.out.println(nextGeneration.size());
 		
-		for(int j = 0; j < popSize; j++) {
+		for(int j = 0; j < popSize; j = j + 2) {
 			parent1 = Selection_Tournament(5, pop);
 			parent2 = Selection_Tournament(5, pop);
 			
@@ -95,8 +99,10 @@ public class TSP {
 			
 			offsprings.clear();		
 		}
-		
-		for(int j = 0; j < popSize; j++){
+
+        //System.out.println(nextGeneration.size());
+
+        for(int j = 0; j < popSize; j++){
 			
 			if(Math.random() <= mut_rate) {
 				
@@ -104,7 +110,9 @@ public class TSP {
 				
 			}
 		}
-			
+
+        //System.out.println(nextGeneration.size());
+
 		return nextGeneration;
 	}
 
