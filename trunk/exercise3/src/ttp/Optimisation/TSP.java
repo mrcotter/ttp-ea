@@ -59,6 +59,8 @@ public class TSP {
 
         //System.out.println("best tour: " + totalDistance(best));
 
+        /** ------ Need Repair Operator ---------- **/
+
 		int[] shortest = new int[best.size()];
 
 		int j = 0;
