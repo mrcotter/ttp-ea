@@ -30,6 +30,8 @@ public class TTPInstance {
     public String edgeWeightType;
     public double[][] nodes;
     public int[][] items;
+
+    public ArrayList<Node> tourList;
     
     public File file;
     
@@ -94,6 +96,7 @@ public class TTPInstance {
                     this.edgeWeightType = line;
                 }
                 if (line.startsWith("NODE_COORD_SECTION")) {
+
                     this.nodes = new double[this.numberOfNodes][3];
                     for (int i=0; i<this.numberOfNodes; i++) {
                         line = br.readLine();
@@ -102,7 +105,7 @@ public class TTPInstance {
                             double temp = Double.parseDouble(splittedLine[j]);
 //                            int temp = Integer.parseInt(splittedLine[j]);
                             // adjust city number by 1
-                            if (j==0) temp =  temp-1;
+                            if (j==0) temp = temp-1;
                             this.nodes[i][j] = temp;
                         }
                     }
@@ -363,5 +366,20 @@ public class TTPInstance {
             }
             System.out.println("---- TTP Instance END ----");
         }
+    }
+
+    public void generateTourList(int[] tour) {
+
+        //System.out.println(tour.length);
+
+        tourList = new ArrayList<Node>(tour.length);
+
+        for (int i = 0; i < tour.length; i++) {
+            double position[] = new double[] {this.nodes[tour[i]][1], this.nodes[tour[i]][2]};
+            Node node = new Node(tour[i], position);
+            tourList.add(node);
+        }
+
+        //System.out.println(tourList.toString());
     }
 }
