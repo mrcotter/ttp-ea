@@ -11,6 +11,7 @@ public class TSP {
 	
 	private ArrayList<ArrayList<Node>> multiTours;
 	private ArrayList<Node> singleTour;
+	private ArrayList<Node> fixedTour = new ArrayList<Node>();
 
 	private ArrayList<ArrayList<Node>> offsprings = new ArrayList<ArrayList<Node>>();
 
@@ -22,8 +23,14 @@ public class TSP {
 		
 		this.instance = instance;
         singleTour = instance.tourList;
+        
+        for(int i = 0; i<singleTour.size(); i++)
+        {
+        	fixedTour.add(singleTour.get(i));
+        }
+        
 
-		//Distance_1 = totalDistance(singleTour);
+		Distance_1 = totalDistance(fixedTour);
 	}
 
 	
@@ -33,20 +40,12 @@ public class TSP {
         double tempDistance, bestDistance;
 		generatePopulation(popSize, true);
 
-        //System.out.println(multiTours.size());
-        //System.out.println("initial tour: " + totalDistance(singleTour));
-
-        multiTours = GA(multiTours, cross_rate, mut_rate);
         best = findShortest(multiTours);
         bestDistance = totalDistance(best);
-
-
-        //System.out.println(multiTours.size());
 		
-		for (int i = 1; i < generations; i++) {
+		for (int i = 0; i < generations; i++) {
 
-            //System.out.println("generation: " + i);
-            multiTours = GA(multiTours, cross_rate, mut_rate);
+            GA(multiTours, cross_rate, mut_rate);
             temp = findShortest(multiTours);
             tempDistance = totalDistance(temp);
 
@@ -54,39 +53,35 @@ public class TSP {
                 best = temp;
             }
 
-            //System.out.println(multiTours.size() + "\n");
 		}
 
-        //System.out.println("best tour: " + totalDistance(best));
 
-        /** ------ Need Repair Operator ---------- **/
-
-		int[] shortest = new int[best.size()];
+		int[] shortest = new int[best.size()+1];
 
 		int j = 0;
         for (Node node : best) {
             shortest[j] = node.getID();
             j++;
         }
+        
+        shortest[best.size()] = shortest[0];
 		
-		//Distance_2 = totalDistance(temp);
+		Distance_2 = totalDistance(best);
 
 		return shortest;
 	}
 
-    private ArrayList<ArrayList<Node>> GA(ArrayList<ArrayList<Node>> pop, double cross_rate, double mut_rate) {
-
-        //System.out.println(pop.size());
+    private void GA(ArrayList<ArrayList<Node>> pop, double cross_rate, double mut_rate) {
 
         ArrayList<ArrayList<Node>> nextGeneration = new ArrayList<ArrayList<Node>>(pop.size());
 		ArrayList<Node> parent1;
 		ArrayList<Node> parent2;
 
         int popSize = pop.size();
-
-        //System.out.println(nextGeneration.size());
+        
+        nextGeneration.add(findShortest(multiTours));
 		
-		for(int j = 0; j < popSize; j = j + 2) {
+		for(int j = 0; j < popSize/2; j++) {
 			parent1 = Selection_Tournament(5, pop);
 			parent2 = Selection_Tournament(5, pop);
 			
@@ -106,7 +101,6 @@ public class TSP {
 			offsprings.clear();		
 		}
 
-        //System.out.println(nextGeneration.size());
 
         for(int j = 0; j < popSize; j++){
 			
@@ -116,10 +110,10 @@ public class TSP {
 				
 			}
 		}
+        
 
-        //System.out.println(nextGeneration.size());
-
-		return nextGeneration;
+		multiTours.clear();
+		multiTours = nextGeneration;
 	}
 
     private void Crossover_Crossover_PMX(ArrayList<Node> tour_1, ArrayList<Node> tour_2) {
@@ -244,11 +238,12 @@ public class TSP {
 		if(ifInitial) {
 			
 			for(int i = 0; i < popSize; i++) {
-                multiTours.add(singleTour);
+                multiTours.add(fixedTour);
                 Collections.shuffle(singleTour);
 			}
 					
 		}
+	
 	}
 
 
@@ -288,8 +283,6 @@ public class TSP {
 
 	}
 
-
-	
 	
 	private ArrayList<Node> findShortest(ArrayList<ArrayList<Node>> tours){
 		
