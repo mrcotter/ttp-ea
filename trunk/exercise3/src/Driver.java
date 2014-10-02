@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import ttp.Optimisation.TSP;
 import ttp.TTPInstance;
 import ttp.TTPSolution;
 import ttp.Utils.DeepCopy;
@@ -26,10 +28,15 @@ public class Driver {
      * args[4]  stopping criterion: time in milliseconds (e.g., 60000 equals 1 minute)
      */
 
+    private static final int POP_SIZE = 20;
+    private static final int GENERATIONS = 1000;
+    private static final double CROSS_RATE = 0.5;
+    private static final double MUTATION_RATE = 0.05;
+
     public static void main(String[] args) {
        
         if (args.length==0) 
-             args = new String[]{"instances", "a280_n1395_uncorr-similar-weights_05.ttp", // to do all 10 instances (several files match the pattern)
+             args = new String[]{"instances", "a280_n279_bounded-strongly-corr_01.ttp", // to do all 10 instances (several files match the pattern)
 //            args = new String[]{"instances", "a280_n1395_bounded-strongly-corr_10.ttp", // to do just this 1 instance
             //args = new String[]{"instances", "fnl4461_n4460_bounded-strongly-corr_01.ttp", // to do just this 1 instance
 //            args = new String[]{"instances", "pla33810_n338090_uncorr_10.ttp", // to do just this 1 instance
@@ -62,7 +69,12 @@ public class Driver {
 
             // generate a Linkern tour (or read it if it already exists)
             int[] tour = Optimisation.linkernTour(instance);
+            // convert the array of tour to arraylist
             instance.generateTourList(tour);
+
+            // First run GA algorithm to optimise TSP solution
+            TSP tsp = new TSP(instance);
+            tour = tsp.runGA(POP_SIZE, GENERATIONS, CROSS_RATE, MUTATION_RATE);
 
             System.out.print(f.getName()+": ");
 
