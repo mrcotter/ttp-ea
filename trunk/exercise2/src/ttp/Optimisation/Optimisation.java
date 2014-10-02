@@ -118,9 +118,7 @@ public class Optimisation {
                         }
                     }
             }
-            
-            
-            
+
 //            ttp.Utils.Utils.startTiming();
             TTPSolution newSolution = new TTPSolution(tour, newPackingPlan);
             instance.evaluate(newSolution);
@@ -168,12 +166,19 @@ public class Optimisation {
         switch (possibleOperation) {
             // Exchange
             case 1:
+               int loop=0;
+               do {
+                   Random rand_index = new Random();
+                   index_1 = rand_index.nextInt(neighbour.length);
+                   index_2 = rand_index.nextInt(neighbour.length);
+                   loop++;
+               } while (index_1 == index_2 || (neighbour[index_1]==neighbour[index_2] && loop<=10));
 
-                do {
-                    Random rand_index = new Random();
-                    index_1 = rand_index.nextInt(neighbour.length);
-                    index_2 = rand_index.nextInt(neighbour.length);
-                } while (index_1 == index_2);
+                // do {
+                //     Random rand_index = new Random();
+                //     index_1 = rand_index.nextInt(neighbour.length);
+                //     index_2 = rand_index.nextInt(neighbour.length);
+                // } while (index_1 == index_2);
 
                 // Swap two elements
                 temp = neighbour[index_1];
