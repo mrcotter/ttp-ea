@@ -371,10 +371,9 @@ public class TTPInstance {
     
     public void generateTourList(int[] tour) {
 
-        tourList = new ArrayList<Node>(tour.length);
+        tourList = new ArrayList<Node>();
         
-        for(int i = 0; i < tour.length-1; i++)
-        {
+        for (int i = 1; i < tour.length-1; i++) {
         	Node node = new Node(tour[i]);
         	tourList.add(node);
         }

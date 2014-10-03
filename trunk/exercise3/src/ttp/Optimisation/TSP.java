@@ -15,7 +15,7 @@ public class TSP {
 	private ArrayList<ArrayList<Node>> offsprings = new ArrayList<ArrayList<Node>>();
 
 	private TTPInstance instance;
-	public double Distance_1 = 0.0, Distance_2 = 0.0;
+	//public double Distance_1 = 0.0, Distance_2 = 0.0;
 
 
 	public TSP(TTPInstance instance) {
@@ -25,14 +25,14 @@ public class TSP {
         
         fixedTour = new ArrayList<Node> (singleTour);        
 
-		Distance_1 = totalDistance(fixedTour);
+		//Distance_1 = totalDistance(fixedTour);
 	}
 
 	
 	public int[] runGA(int popSize, int generations, double cross_rate, double mut_rate) {
 
-		ArrayList<Node> temp = null, best = null;
-        double tempDistance = 0.0, bestDistance = 0.0;
+		ArrayList<Node> temp, best;
+        double tempDistance, bestDistance;
 		generatePopulation(popSize, true);
 
         best = new ArrayList<Node>(fixedTour);
@@ -54,13 +54,12 @@ public class TSP {
 		int[] shortest = new int[best.size()+2];
 
 		int j = 1;
-		for(int i = 0; i < best.size(); i++){
-			
-			shortest[j] = best.get(i).getID();
-			j++;
-		}
+        for (Node node : best) {
+            shortest[j] = node.getID();
+            j++;
+        }
 		      
-		Distance_2 =totalDistance(best);		
+		//Distance_2 =totalDistance(best);
 
 		return shortest;
 	}

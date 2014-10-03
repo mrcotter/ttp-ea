@@ -22,10 +22,7 @@ import ttp.Utils.DeepCopy;
  */
 public class Optimisation {
 
-    // Rate for randomly remove or insert an element from or to a packing plan
-    private static final double RATE = 0.5;
-
-    public static TTPSolution hillClimber(TTPInstance instance, int[] tour, 
+    public static TTPSolution hillClimber(TTPInstance instance, int[] tour,
             int mode, 
             int durationWithoutImprovement, int maxRuntime) {
         
@@ -169,11 +166,13 @@ public class Optimisation {
             // Exchange
             case 1:
 
+                int loop=0;
                 do {
                     Random rand_index = new Random();
                     index_1 = rand_index.nextInt(neighbour.length);
                     index_2 = rand_index.nextInt(neighbour.length);
-                } while (index_1 == index_2);
+                    loop++;
+                } while (index_1 == index_2 || (neighbour[index_1]==neighbour[index_2] && loop<=10));
 
                 // Swap two elements
                 temp = neighbour[index_1];
