@@ -4,14 +4,13 @@ import java.util.*;
 
 import ttp.Node;
 import ttp.TTPInstance;
-import ttp.TTPSolution;
 
 
 public class TSP {
 	
 	private ArrayList<ArrayList<Node>> multiTours;
 	private ArrayList<Node> singleTour;
-	private ArrayList<Node> fixedTour = new ArrayList<Node>();
+	private ArrayList<Node> fixedTour;
 
 	private ArrayList<ArrayList<Node>> offsprings = new ArrayList<ArrayList<Node>>();
 
@@ -24,11 +23,7 @@ public class TSP {
 		this.instance = instance;
         singleTour = instance.tourList;
         
-        for(int i = 0; i<singleTour.size(); i++)
-        {
-        	fixedTour.add(singleTour.get(i));
-        }
-        
+        fixedTour = new ArrayList<Node> (singleTour);        
 
 		Distance_1 = totalDistance(fixedTour);
 	}
@@ -36,11 +31,11 @@ public class TSP {
 	
 	public int[] runGA(int popSize, int generations, double cross_rate, double mut_rate) {
 
-		ArrayList<Node> temp, best;
-        double tempDistance, bestDistance;
+		ArrayList<Node> temp = null, best = null;
+        double tempDistance = 0.0, bestDistance = 0.0;
 		generatePopulation(popSize, true);
 
-        best = findShortest(multiTours);
+        best = new ArrayList<Node>(fixedTour);
         bestDistance = totalDistance(best);
 		
 		for (int i = 0; i < generations; i++) {
@@ -49,24 +44,23 @@ public class TSP {
             temp = findShortest(multiTours);
             tempDistance = totalDistance(temp);
 
-            if (tempDistance < bestDistance) {
-                best = temp;
+            if (tempDistance < bestDistance) {            	
+            	best = new ArrayList<Node>(temp);
             }
 
 		}
-
-
-		int[] shortest = new int[best.size()+1];
-
-		int j = 0;
-        for (Node node : best) {
-            shortest[j] = node.getID();
-            j++;
-        }
-        
-        shortest[best.size()] = shortest[0];
 		
-		Distance_2 = totalDistance(best);
+		
+		int[] shortest = new int[best.size()+2];
+
+		int j = 1;
+		for(int i = 0; i < best.size(); i++){
+			
+			shortest[j] = best.get(i).getID();
+			j++;
+		}
+		      
+		Distance_2 =totalDistance(best);		
 
 		return shortest;
 	}
@@ -298,7 +292,7 @@ public class TSP {
 	}
 	
 	
-	public double totalDistance(ArrayList<Node> tour) {
+	private double totalDistance(ArrayList<Node> tour) {
 		double Distance = 0.0;
 		
 		for (int i = 0; i < tour.size(); i++)
