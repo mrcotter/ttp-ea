@@ -77,6 +77,10 @@ public class Driver {
 
             // First run GA algorithm to optimise TSP solution
             TSP tsp = new TSP(instance);
+
+            //
+            ttp.Utils.Utils.startTiming();
+            //
             tour = tsp.runGA(POP_SIZE, GENERATIONS, CROSS_RATE, MUTATION_RATE);
 
             // do the optimisation
