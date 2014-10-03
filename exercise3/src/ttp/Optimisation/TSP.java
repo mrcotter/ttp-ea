@@ -46,6 +46,7 @@ public class TSP {
 
             if (tempDistance < bestDistance) {            	
             	best = new ArrayList<Node>(temp);
+            	bestDistance = totalDistance(best);
             }
 
 		}
