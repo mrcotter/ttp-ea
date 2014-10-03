@@ -26,7 +26,7 @@ public class Optimisation {
             int mode, 
             int durationWithoutImprovement, int maxRuntime) {
         
-        ttp.Utils.Utils.startTiming();
+        //ttp.Utils.Utils.startTiming();
         
         TTPSolution s = null;
         boolean debugPrint = !true;
