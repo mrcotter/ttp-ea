@@ -32,6 +32,7 @@ public class Driver {
     private static final int GENERATIONS = 10000;
     private static final double CROSS_RATE = 0.8;
     private static final double MUTATION_RATE = 0.3;
+    private static final int MAX_RUN_TIME = 600000;
 
     public static void main(String[] args) {
        
@@ -81,7 +82,7 @@ public class Driver {
             //
             ttp.Utils.Utils.startTiming();
             //
-            tour = tsp.runGA(POP_SIZE, GENERATIONS, CROSS_RATE, MUTATION_RATE);
+            tour = tsp.runGA(POP_SIZE, GENERATIONS, CROSS_RATE, MUTATION_RATE, MAX_RUN_TIME);
 
             // do the optimisation
             TTPSolution solution = Optimisation.hillClimber(instance, tour, algorithm,
