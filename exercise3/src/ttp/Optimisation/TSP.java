@@ -29,7 +29,7 @@ public class TSP {
 	}
 
 	
-	public int[] runGA(int popSize, int generations, double cross_rate, double mut_rate) {
+	public int[] runGA(int popSize, int generations, double cross_rate, double mut_rate, int MaxRunTime) {
 
 		ArrayList<Node> temp, best;
         double tempDistance, bestDistance;
@@ -37,6 +37,8 @@ public class TSP {
 
         best = new ArrayList<Node>(fixedTour);
         bestDistance = totalDistance(best);
+
+        long startingTimeForRuntimeLimit = System.currentTimeMillis()-200;
 		
 		for (int i = 0; i < generations; i++) {
 
@@ -47,6 +49,10 @@ public class TSP {
             if (tempDistance < bestDistance) {            	
             	best = new ArrayList<Node>(temp);
             	bestDistance = totalDistance(best);
+            }
+
+            if(i%10==0 && (System.currentTimeMillis()-startingTimeForRuntimeLimit)>=MaxRunTime){
+                break;      
             }
 
 		}
