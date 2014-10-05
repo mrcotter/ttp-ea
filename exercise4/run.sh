@@ -11,39 +11,39 @@
 #
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=a280_n279_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=a280_n279_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=a280_n1395_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=a280_n1395_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=a280_n2790_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=a280_n2790_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=fnl4461_n4460_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=fnl4461_n4460_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=fnl4461_n22300_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=fnl4461_n22300_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=fnl4461_n44600_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=fnl4461_n44600_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=pla33810_n33809_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=pla33810_n33809_bounded-strongly-corr_01.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=pla33810_n169045_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=pla33810_n169045_uncorr-similar-weights_05.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 for i in `seq 1 $1`; do
-    ant run -Darg0=instances -Darg1=pla33810_n338090_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=40000
+    ant run -Darg0=instances -Darg1=pla33810_n338090_uncorr_10.ttp -Darg2=3 -Darg3=10000 -Darg4=100000
 done
 
 ant clean
