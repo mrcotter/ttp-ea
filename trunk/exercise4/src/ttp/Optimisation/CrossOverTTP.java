@@ -42,7 +42,11 @@ public class CrossOverTTP {
         
         long startingTimeForRuntimeLimit = System.currentTimeMillis()-200;
         
-        for(int i = 0; i < generations; i++){            
+        for(int i = 0; i < generations; i++){
+
+        	if (i%10==0 && (System.currentTimeMillis()-startingTimeForRuntimeLimit)>=MaxRunTime){
+            		break;
+            	}              
         	
         	GA_Plan(multiPlans, cross_rate);
         	
@@ -54,10 +58,6 @@ public class CrossOverTTP {
                 	bestSolution = newSolution;
                 	bestObjective = newSolution.ob;
                 }
-                
-                if (i%10==0 && (System.currentTimeMillis()-startingTimeForRuntimeLimit)>=MaxRunTime){
-            		break;
-            	}  
         		
         	}
         }
