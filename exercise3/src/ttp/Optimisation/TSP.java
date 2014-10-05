@@ -38,7 +38,7 @@ public class TSP {
         best = new ArrayList<Node>(fixedTour);
         bestDistance = totalDistance(best);
 
-        long startingTimeForRuntimeLimit = System.currentTimeMillis()-700;
+        long startingTimeForRuntimeLimit = System.currentTimeMillis()-1000;
 		
 		for (int i = 0; i < generations; i++) {
 

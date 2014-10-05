@@ -32,7 +32,7 @@ public class Driver {
     private static final int GENERATIONS = 10000;
     private static final double CROSS_RATE = 0.8;
     private static final double MUTATION_RATE = 0.3;
-    private static final int MAX_RUN_TIME = 600000;
+    private static final int MAX_RUN_TIME = 150000;
 
     public static void main(String[] args) {
        
@@ -66,7 +66,7 @@ public class Driver {
             TTPInstance instance = new TTPInstance(f);
 
             long startTime = System.currentTimeMillis();
-            String resultTitle = instance.file.getName() + ".LS-P." + startTime;
+            String resultTitle = instance.file.getName() + ".OLS." + startTime;
 
             // generate a Linkern tour (or read it if it already exists)
             int[] tour = Optimisation.linkernTour(instance);
