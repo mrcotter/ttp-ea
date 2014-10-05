@@ -35,10 +35,10 @@ public class Driver {
     private static final int GENERATIONS = 10000;
     private static final double CROSS_RATE = 0.8;
     private static final double MUTATION_RATE = 0.3;
-    private static final int MAX_RUN_TIME = 1500;
+    private static final int MAX_RUN_TIME = 100000;
     
     private static final int POP_SIZE_SOL = 5;
-    private static final int MAX_RUN_TIME_SOL = 15000;
+    private static final int MAX_RUN_TIME_SOL = 100000;
     private static final int GENERATIONS_SOL = 10000;
     private static final double CROSS_RATE_SOL = 0.9;
     
