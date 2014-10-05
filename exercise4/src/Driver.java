@@ -1,4 +1,4 @@
-
+import ttp.Optimisation.*;
 
 import java.io.*;
 import ttp.Optimisation.Optimisation;
@@ -34,7 +34,7 @@ public class Driver {
     private static final double MUTATION_RATE = 0.3;
     private static final int MAX_RUN_TIME = 150000;
     private static final int POP_SIZE_SOL = 10;
-    private static final int MAX_RUN_TIME_SOL = 600000;
+    private static final int MAX_RUN_TIME_SOL = 15000;
     private static final int GENERATIONS_SOL = 10000;
     private static final double CROSS_RATE_SOL = 0.9;
 
@@ -90,7 +90,7 @@ public class Driver {
 
             CrossOverTTP cottp = new CrossOverTTP(instance, tour);
 
-            TTPSolution solution
+            TTPSolution solution;
 
             // do the optimisation
             for(int i = 0; i < POP_SIZE_SOL; i++) {
