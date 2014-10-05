@@ -1,0 +1,58 @@
+<project default="all">
+	<property name="obj-dir" location="build" />
+	<property name="lib-dir" location="lib" />
+	<property name="src-dir" location="src" />
+
+	<target name="init">
+		<mkdir dir="${obj-dir}" />
+		<mkdir dir="${lib-dir}" />
+	</target>
+
+	<target name="clean-init">
+		<delete dir="${obj-dir}" />
+		<delete dir="${lib-dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src-dir}"
+			destdir="${obj-dir}"
+			includeantruntime="false" />
+	</target>
+
+	<target name="clean-compile">
+		<delete>
+			<fileset dir="${obj-dir}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${lib-dir}/ttp.jar"
+			 basedir="${obj-dir}" />
+	</target>
+
+	<target name="clean-jar">
+		<delete file="${lib-dir}/ttp.jar" />
+	</target>
+
+	<target name="run" depends="jar">
+		<property name="arg0" value="instances" />
+		<property name="arg1" value="a280_n279_bounded-strongly-corr_01.ttp" />
+		<property name="arg2" value="1" />
+		<property name="arg3" value="10000" />
+		<property name="arg4" value="60000" />
+		<java classname="Driver" fork="true">
+            <jvmarg value="-Xmx128m" />
+			<classpath path="${lib-dir}/ttp.jar" />
+			<arg value = "${arg0}" />
+			<arg value = "${arg1}" />
+			<arg value = "${arg2}" />
+			<arg value = "${arg3}" />
+			<arg value = "${arg4}" />
+		</java>
+	</target>
+
+	<target name="all" depends="run" />
+
+	<target name="clean" depends="clean-init" />
+</project>
+
