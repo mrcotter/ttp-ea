@@ -54,12 +54,14 @@
 	</target>
 	
 	<target name="run" depends="jar">
+		<property name="arg0" value="ZDT3" />
 		<java classname="${main-class}" fork="true">
 			<jvmarg value="-Xmx64m" />
 			<classpath>
 				<path refid="classpath" />
 				<path location="${jar-dir}/${jar-name}" />
 			</classpath>
+			<arg value = "${arg0}" />
 		</java>
 	</target>
 
