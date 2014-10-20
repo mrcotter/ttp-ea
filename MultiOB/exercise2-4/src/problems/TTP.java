@@ -78,7 +78,6 @@ public class TTP extends Problem {
         int lastCity  = ((Permutation) solution.getDecisionVariables()[0]).vector_[numberOfNodes - 1];
 
         double fitness1_td = 0.0;
-        double fitness2_ob = 0.0;
 
         // Calculate fitness 1 - total distance
         // Generate tour with same start city and end city
@@ -111,6 +110,7 @@ public class TTP extends Problem {
             z[i] = (int) variable.getValue();
         }
 
+        double fitness2_ob;
         double wc = 0.0;
         double ft = 0.0;
         double fp = 0.0;
