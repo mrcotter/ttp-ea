@@ -2,6 +2,7 @@ package jmetal.problems;
 
 import jmetal.core.Problem;
 import jmetal.core.Solution;
+import jmetal.core.Variable;
 import jmetal.encodings.solutionType.PermutationIntSolutionType;
 import jmetal.encodings.variable.Int;
 import jmetal.encodings.variable.Permutation;
@@ -71,38 +72,86 @@ public class TTP extends Problem {
     @Override
     public void evaluate(Solution solution) throws JMException {
 
-        // Correctness check: does the tour start and end in the same city
+        int[] tour = new int[numberOfNodes + 1];
+
         int firstCity = ((Permutation) solution.getDecisionVariables()[0]).vector_[0];
         int lastCity  = ((Permutation) solution.getDecisionVariables()[0]).vector_[numberOfNodes - 1];
-
-        if(firstCity != lastCity) {
-            System.err.println("ERROR: The last city must be the same as the first city");
-            System.exit(1);
-        }
 
         double fitness1_td = 0.0;
         double fitness2_ob = 0.0;
 
         // Calculate fitness 1 - total distance
+        // Generate tour with same start city and end city
         for (int i = 0; i < numberOfNodes - 1; i++) {
 
             int x = ((Permutation) solution.getDecisionVariables()[0]).vector_[i];
             int y = ((Permutation) solution.getDecisionVariables()[0]).vector_[i+1];
 
+            tour[i] = x;
+            tour[i+1] = y;
+
             fitness1_td += distanceMatrix_[x][y];
         }
+
+        tour[numberOfNodes] = tour[0];
         fitness1_td += distanceMatrix_[firstCity][lastCity];
 
 
-        // Calculate fitness 2 - objective value of a given tour
-        for (int i = 0; i < numberOfNodes - 1; i++) {
-
-            int currentCityTEMP = ((Permutation)solution.getDecisionVariables()[0]).vector_[i];
-            // what's the current city? --> but the items start at city 2 in the TTP file, so I have to take another 1 off!
-            int currentCity = currentCityTEMP-1;
-
+        // Correctness check: does the tour start and end in the same city
+        if(tour[0] != tour[tour.length - 1]) {
+            System.err.println("ERROR: The last city must be the same as the first city");
+            System.exit(1);
         }
 
+
+        // Calculate fitness 2 - objective value of a given tour
+        Variable variable = solution.getDecisionVariables()[1];
+        int[] z = new int[numberOfItems];
+        for (int i = 0; i < numberOfItems; i++) {
+            z[i] = (int) variable.getValue();
+        }
+
+        double wc = 0.0;
+        double ft = 0.0;
+        double fp = 0.0;
+
+        //the following is used for a different interpretation of "packingPlan"
+        int itemsPerCity = z.length / (tour.length - 2);
+
+        for (int i = 0; i < tour.length - 1; i++) {
+
+            int currentCityTEMP = tour[i];
+            // what's the current city? --> but the items start at city 2 in the TTP file, so I have to take another 1 off!
+            int currentCity = currentCityTEMP - 1;
+
+            if (i > 0) {
+                for (int itemNumber = 0; itemNumber < itemsPerCity; itemNumber++) {
+
+                    int indexOfPackingPlan = (i-1) * itemsPerCity + itemNumber;
+                    // what is the next item's index in items-array?
+                    int itemIndex = currentCity + itemNumber * (numberOfNodes - 1);
+
+                    if (z[indexOfPackingPlan] == 1) {
+                        // pack item
+                        int currentWC = items[itemIndex][2];
+                        wc += currentWC;
+
+                        int currentFP = items[itemIndex][1];
+                        fp += currentFP;
+                    }
+                }
+
+                int h = (i+1) % (tour.length-1); //h: next tour city index
+                long distance = distanceMatrix_[i][h];
+                // compute the adjusted (effective) distance
+                ft += (distance / (1 - wc * (maxSpeed - minSpeed) / capacityOfKnapsack));
+            }
+        }
+
+        fitness2_ob = fp - ft * rentingRatio;
+
+        solution.setObjective(0, fitness1_td);
+        solution.setObjective(1, -fitness2_ob); // Convert from maximum objective value to minimum objective value
     }
 
 
