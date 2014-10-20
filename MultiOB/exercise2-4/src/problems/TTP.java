@@ -27,6 +27,8 @@ public class TTP extends Problem {
     public double[][]  nodes;
     public int[][]     items;
 
+    public double [][] distanceMatrix_ ;
+
     /**
      * Creates a new TTP problem instance. It accepts data files from a ttp file
      * @throws IOException
@@ -39,10 +41,20 @@ public class TTP extends Problem {
 
         length_ = new int[numberOfVariables_];
 
+        distanceMatrix_ = readProblem(fileName) ;
 
-        readProblem(fileName) ;
+        System.out.println(numberOfNodes) ;
+        System.out.println(numberOfItems) ;
+        length_      [0] = numberOfNodes ;
+        length_      [1] = numberOfItems;
 
-    }
+        if (solutionType.compareTo("PermutationInt") == 0)
+            solutionType_ = new PermutationIntSolutionType(this, 1, 1) ;
+        else {
+            System.out.println("Error: solution type " + solutionType + " invalid") ;
+            System.exit(-1) ;
+        }
+    } // TTP
 
     /**
      * Evaluates a solution
@@ -54,8 +66,9 @@ public class TTP extends Problem {
     }
 
 
-    private void readProblem(String fileName) throws IOException {
+    private double[][] readProblem(String fileName) throws IOException {
 
+        double[][] matrix = null;
         BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(fileName)));
 
@@ -137,10 +150,30 @@ public class TTP extends Problem {
                 }
             }
             br.close();
+
         } catch (Exception ex) {
             System.err.println ("TTP.readProblem(): error when reading data file " + ex);
             System.exit(1);
         }
 
+        double dist;
+        long distance;
+        matrix = new double[numberOfNodes][numberOfNodes];
+
+        for (int i = 0; i < numberOfNodes; i++) {
+            matrix[i][i] = 0.0;
+            for (int j = i + 1; j < numberOfNodes; j++) {
+                dist = Math.sqrt(
+                                (this.nodes[i][1]-this.nodes[j][1]) *
+                                (this.nodes[i][1]-this.nodes[j][1]) +
+                                (this.nodes[i][2]-this.nodes[j][2]) *
+                                (this.nodes[i][2]-this.nodes[j][2]));
+                distance = (long) Math.ceil(dist);
+                matrix[i][j] = distance;
+                matrix[j][i] = distance;
+            }
+        }
+
+        return matrix;
     }
 }
