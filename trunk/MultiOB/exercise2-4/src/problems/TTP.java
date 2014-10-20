@@ -15,15 +15,32 @@ import java.io.*;
 
 public class TTP extends Problem {
 
-    public int         numberOfCities_ ;
-    public int         numberOfItems_  ;
-    public double [][] distanceMatrix_ ;
-
+    public String      name;
+    public String      knapsackDataType;
+    public int         numberOfNodes;
+    public int         numberOfItems;
+    public long        capacityOfKnapsack;
+    public double      minSpeed;
+    public double      maxSpeed;
+    public double      rentingRatio;
+    public String      edgeWeightType;
+    public double[][]  nodes;
+    public int[][]     items;
 
     /**
-     * Creates a new TTP problem instance. It accepts data files from ttp file
+     * Creates a new TTP problem instance. It accepts data files from a ttp file
+     * @throws IOException
      */
-    public TTP(String solutionType, String filename) {
+    public TTP(String solutionType, String fileName) throws IOException {
+        numberOfVariables_  = 2;
+        numberOfObjectives_ = 2;
+        numberOfConstraints_= 0;
+        problemName_        = "TTP";
+
+        length_ = new int[numberOfVariables_];
+
+
+        readProblem(fileName) ;
 
     }
 
@@ -33,6 +50,97 @@ public class TTP extends Problem {
      */
     @Override
     public void evaluate(Solution solution) throws JMException {
+
+    }
+
+
+    private void readProblem(String fileName) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileName)));
+
+        try {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // process the line
+
+                if (line.startsWith("PROBLEM NAME")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.name = line;
+                }
+                if (line.startsWith("KNAPSACK DATA TYPE")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.knapsackDataType = line;
+                }
+                if (line.startsWith("DIMENSION")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.numberOfNodes=Integer.parseInt(line);
+                }
+                if (line.startsWith("NUMBER OF ITEMS")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.numberOfItems=Integer.parseInt(line);
+                }
+                if (line.startsWith("CAPACITY OF KNAPSACK")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.capacityOfKnapsack=Long.parseLong(line);
+                }
+                if (line.startsWith("MIN SPEED")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.minSpeed=Double.parseDouble(line);
+                }
+                if (line.startsWith("MAX SPEED")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.maxSpeed=Double.parseDouble(line);
+                }
+                if (line.startsWith("RENTING RATIO")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.rentingRatio=Double.parseDouble(line);
+                }
+                if (line.startsWith("EDGE_WEIGHT_TYPE")) {
+                    line = line.substring(line.indexOf(":")+1);
+                    line = line.replaceAll("\\s+","");
+                    this.edgeWeightType = line;
+                }
+                if (line.startsWith("NODE_COORD_SECTION")) {
+                    this.nodes = new double[this.numberOfNodes][3];
+                    for (int i=0; i<this.numberOfNodes; i++) {
+                        line = br.readLine();
+                        String[] splittedLine = line.split("\\s+");
+                        for (int j=0; j<splittedLine.length; j++) {
+                            double temp = Double.parseDouble(splittedLine[j]);
+                            if (j==0) temp =  temp-1;
+                            this.nodes[i][j] = temp;
+                        }
+                    }
+                }
+                if (line.startsWith("ITEMS SECTION")) {
+                    this.items = new int[this.numberOfItems][4];
+                    for (int i=0; i<this.numberOfItems; i++) {
+                        line = br.readLine();
+                        String[] splittedLine = line.split("\\s+");
+                        for (int j=0; j<splittedLine.length; j++) {
+                            int temp = Integer.parseInt(splittedLine[j]);
+                            // adjust city number by 1
+                            if (j==0) temp =  temp-1;  // item numbers start here with 0 --> in TTP files with 1
+                            if (j==3) temp =  temp-1;  // city numbers start here with 0 --> in TTP files with 1
+                            this.items[i][j] = temp;
+                        }
+                    }
+                }
+            }
+            br.close();
+        } catch (Exception ex) {
+            System.err.println ("TTP.readProblem(): error when reading data file " + ex);
+            System.exit(1);
+        }
 
     }
 }
