@@ -4,7 +4,6 @@ import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
 import jmetal.encodings.solutionType.PermutationIntSolutionType;
-import jmetal.encodings.variable.Int;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.JMException;
 
@@ -73,16 +72,13 @@ public class TTP extends Problem {
     public void evaluate(Solution solution) throws JMException {
 
         int[] tour = new int[numberOfNodes + 1];
-
         int firstCity = ((Permutation) solution.getDecisionVariables()[0]).vector_[0];
         int lastCity  = ((Permutation) solution.getDecisionVariables()[0]).vector_[numberOfNodes - 1];
 
         double fitness1_td = 0.0;
 
         // Calculate fitness 1 - total distance
-        // Generate tour with same start city and end city
         for (int i = 0; i < numberOfNodes - 1; i++) {
-
             int x = ((Permutation) solution.getDecisionVariables()[0]).vector_[i];
             int y = ((Permutation) solution.getDecisionVariables()[0]).vector_[i+1];
 
@@ -91,8 +87,9 @@ public class TTP extends Problem {
 
             fitness1_td += distanceMatrix_[x][y];
         }
-
+        // Generate tour with same start city and end city
         tour[numberOfNodes] = tour[0];
+
         fitness1_td += distanceMatrix_[firstCity][lastCity];
 
 
