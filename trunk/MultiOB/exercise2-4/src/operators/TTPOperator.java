@@ -10,8 +10,11 @@ import jmetal.operators.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
+import jmetal.util.comparators.DominanceComparator;
+import jmetal.util.comparators.OverallConstraintViolationComparator;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,6 +41,13 @@ public class TTPOperator extends Operator {
     private SolutionSet archive_;
 
     private int improvementRounds_;
+
+    /**
+     * Stores comparators for dealing with constraints and dominance checking,
+     * respectively.
+     */
+    private Comparator constraintComparator_ ;
+    private Comparator dominanceComparator_ ;
 
     /**
      * Stores the mutation operator
@@ -69,6 +79,8 @@ public class TTPOperator extends Operator {
 
         evaluations_ = 0;
         archive_ = null;
+        dominanceComparator_  = new DominanceComparator();
+        constraintComparator_ = new OverallConstraintViolationComparator();
     }
 
     /**
@@ -107,10 +119,68 @@ public class TTPOperator extends Operator {
                 parents[1]);
 
         // Next apply mutation local search to Variable[0] - TSP and Variable[1] - Packing Plan
-
+        Solution[] offspring = new Solution[2];
+        offspring[0] = doMutationLocalSearch(partialOffspring[0]);
+        offspring[1] = doMutationLocalSearch(partialOffspring[1]);
 
         return offspring;
     }
+
+    private Solution doMutationLocalSearch(Solution solution) throws JMException {
+
+        int i = 0;
+        int best = 0;
+        evaluations_ = 0;
+
+        int rounds = improvementRounds_;
+        archive_ = (SolutionSet) getParameter("archive");
+
+        if (rounds <= 0)
+            return new Solution(solution);
+
+        do {
+            i++;
+            Solution mutatedSolution = new Solution(solution);
+            mutationOperator_.execute(mutatedSolution);
+
+            // Evaluate the getNumberOfConstraints
+            if (problem_.getNumberOfConstraints() > 0) {
+                problem_.evaluateConstraints(mutatedSolution);
+                best = constraintComparator_.compare(mutatedSolution,solution);
+
+                if (best == 0) { //none of then is better that the other one
+                    problem_.evaluate(mutatedSolution);
+                    evaluations_++;
+                    best = dominanceComparator_.compare(mutatedSolution,solution);
+                }
+                else if (best == -1) { //mutatedSolution is best
+                    problem_.evaluate(mutatedSolution);
+                    evaluations_++;
+                }
+            }
+            else {
+                problem_.evaluate(mutatedSolution);
+                evaluations_++;
+                best = dominanceComparator_.compare(mutatedSolution,solution);
+            }
+
+            if (best == -1) // This is: Mutated is best
+                solution = mutatedSolution;
+            else if (best == 1) // This is: Original is best
+                //delete mutatedSolution
+                ;
+            else { // This is mutatedSolution and original are non-dominated
+                //this.archive_.addIndividual(new Solution(solution));
+                //solution = mutatedSolution;
+                if (archive_ != null)
+                    archive_.add(mutatedSolution);
+            }
+        }
+
+        while (i < rounds);
+        return new Solution(solution);
+    }
+
 
     private Solution[] doCrossover(double probability, Solution parent1, Solution parent2) {
 
