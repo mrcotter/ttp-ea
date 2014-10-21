@@ -2,9 +2,10 @@ package jmetal.operators;
 
 import jmetal.core.Operator;
 import jmetal.core.Solution;
+
 import jmetal.encodings.solutionType.PermutationIntSolutionType;
+import jmetal.encodings.solutionType.PermutationSolutionType;
 import jmetal.encodings.variable.Permutation;
-import jmetal.operators.mutation.Mutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
@@ -24,14 +25,8 @@ public class TTPOperator extends Operator {
      */
     private static final List VALID_TYPES = Arrays.asList(PermutationIntSolutionType.class);
 
-
-    /**
-     * Stores the mutation operator
-     */
-    private Operator mutationOperator_;
-
-
     private Double crossoverProbability_;
+    private Double mutationProbability_;
 
     /**
      * Constructor
@@ -40,15 +35,14 @@ public class TTPOperator extends Operator {
     public TTPOperator(HashMap<String, Object> parameters) {
         super(parameters);
 
-
-            mutationOperator_ = (Mutation) parameters.get("mutation") ;
         if (parameters.get("crossProb") != null)
             crossoverProbability_ = (Double) parameters.get("crossProb");
-
+        if (parameters.get("mutationProb") != null)
+            mutationProbability_ = (Double) parameters.get("mutationProb");
     }
 
     /**
-     * Executes the operation (including local search and crossover)
+     * Executes the operation (including crossover and mutation)
      *
      * @param object Object representing a solution
      * @throws JMException
@@ -77,19 +71,103 @@ public class TTPOperator extends Operator {
             throw new JMException("Exception in " + name + ".execute()");
         }
 
-        // First apply crossover operation only to Variable[0] - TSP
-        Solution[] partialOffspring = doCrossover(crossoverProbability.doubleValue(),
+        // First apply pmx crossover operator only to Variable[0] - TSP
+        Solution[] offspring = doPMXCrossover(crossoverProbability.doubleValue(),
                 parents[0],
                 parents[1]);
 
-        // Next apply mutation local search to Variable[0] - TSP and Variable[1] - Packing Plan
+        // Next apply swap mutation operator only to Variable[0] - TSP
+        doSwapMutation(mutationProbability_.doubleValue(), offspring[0]);
+        doSwapMutation(mutationProbability_.doubleValue(), offspring[1]);
 
+        // Finally apply bitflip mutation operator only to Variable[1] - Packing Plan
+        doBitFlipMutation(mutationProbability_.doubleValue(), offspring[0]);
+        doBitFlipMutation(mutationProbability_.doubleValue(), offspring[1]);
 
-        return null;
+        return offspring;
     }
 
+    /**
+     * Perform the bit flip mutation operation
+     * @param probability Mutation probability
+     * @param solution The solution to mutate
+     * @throws JMException
+     */
+    private void doBitFlipMutation(double probability, Solution solution) throws JMException {
 
-    private Solution[] doCrossover(double probability, Solution parent1, Solution parent2) {
+        try {
+            // Integer representation
+            if (PseudoRandom.randDouble() < probability) {
+
+                int value = PseudoRandom.randInt(
+                    (int)solution.getDecisionVariables()[1].getLowerBound(),
+                    (int)solution.getDecisionVariables()[1].getUpperBound());
+
+                solution.getDecisionVariables()[1].setValue(value);
+            }
+
+        } catch (ClassCastException e1) {
+            Configuration.logger_.severe("BitFlipMutation.doMutation: " +
+                    "ClassCastException error" + e1.getMessage());
+            Class cls = java.lang.String.class;
+            String name = cls.getName();
+            throw new JMException("Exception in " + name + ".doMutation()");
+        }
+    }
+
+    /**
+     * Performs the swap mutation operation
+     * @param probability Mutation probability
+     * @param solution The solution to mutate
+     * @throws JMException
+     */
+    private void doSwapMutation(double probability, Solution solution) throws JMException {
+
+        int permutation[] ;
+        int permutationLength ;
+        if (solution.getType().getClass() == PermutationSolutionType.class) {
+
+            permutationLength = ((Permutation)solution.getDecisionVariables()[0]).getLength() ;
+            permutation = ((Permutation)solution.getDecisionVariables()[0]).vector_ ;
+
+            if (PseudoRandom.randDouble() < probability) {
+                int pos1 ;
+                int pos2 ;
+
+                pos1 = PseudoRandom.randInt(0,permutationLength-1) ;
+                pos2 = PseudoRandom.randInt(0,permutationLength-1) ;
+
+                while (pos1 == pos2) {
+                    if (pos1 == (permutationLength - 1))
+                        pos2 = PseudoRandom.randInt(0, permutationLength- 2);
+                    else
+                        pos2 = PseudoRandom.randInt(pos1, permutationLength- 1);
+                } // while
+                // swap
+                int temp = permutation[pos1];
+                permutation[pos1] = permutation[pos2];
+                permutation[pos2] = temp;
+            } // if
+        } // if
+        else  {
+            Configuration.logger_.severe("SwapMutation.doMutation: invalid type. " +
+                    ""+ solution.getDecisionVariables()[0].getVariableType());
+
+            Class cls = java.lang.String.class;
+            String name = cls.getName();
+            throw new JMException("Exception in " + name + ".doMutation()") ;
+        }
+    }
+
+    /**
+     * Perform the pmx crossover operation
+     *
+     * @param probability Crossover probability
+     * @param parent1     The first parent
+     * @param parent2     The second parent
+     * @return An array containing the two offsprings
+     */
+    private Solution[] doPMXCrossover(double probability, Solution parent1, Solution parent2) {
 
         Solution[] offspring = new Solution[2];
 
