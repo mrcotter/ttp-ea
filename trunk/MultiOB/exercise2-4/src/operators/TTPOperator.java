@@ -3,7 +3,7 @@ package jmetal.operators;
 import jmetal.core.Operator;
 import jmetal.core.Solution;
 
-import jmetal.encodings.solutionType.PermutationIntSolutionType;
+import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
 import jmetal.encodings.solutionType.PermutationSolutionType;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.Configuration;
@@ -23,7 +23,7 @@ public class TTPOperator extends Operator {
     /**
      * Valid solution types to apply this operator
      */
-    private static final List VALID_TYPES = Arrays.asList(PermutationIntSolutionType.class);
+    private static final List VALID_TYPES = Arrays.asList(PermutationArrayIntSolutionType.class);
 
     private Double crossoverProbability_;
     private Double mutationProbability_;
