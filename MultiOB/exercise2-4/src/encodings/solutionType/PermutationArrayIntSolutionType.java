@@ -3,7 +3,7 @@ package jmetal.encodings.solutionType;
 import jmetal.core.Problem;
 import jmetal.core.SolutionType;
 import jmetal.core.Variable;
-import jmetal.encodings.variable.Int;
+import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 
 
@@ -12,9 +12,9 @@ import jmetal.encodings.variable.Permutation;
  * and a int.
  */
 
-public class PermutationIntSolutionType extends SolutionType {
+public class PermutationArrayIntSolutionType extends SolutionType {
 
-    private final int intVariables_ ;
+    private final int arrayIntVariables_ ;
     private final int permutationVariables_ ;
 
     /**
@@ -23,10 +23,10 @@ public class PermutationIntSolutionType extends SolutionType {
      * @param permutationVariables Number of integer variables
      * @param intVariables Number of real variables
      */
-    public PermutationIntSolutionType(Problem problem, int permutationVariables, int intVariables) {
+    public PermutationArrayIntSolutionType(Problem problem, int permutationVariables, int intVariables) {
         super(problem) ;
         permutationVariables_ = permutationVariables ;
-        intVariables_ = intVariables ;
+        arrayIntVariables_ = intVariables ;
     } // Constructor
 
     /**
@@ -40,9 +40,8 @@ public class PermutationIntSolutionType extends SolutionType {
         for (int var = 0; var < permutationVariables_; var++)
             variables[var] = new Permutation(problem_.getLength(var));
 
-        for (int var = permutationVariables_; var < (permutationVariables_ + intVariables_); var++)
-            variables[var] = new Int((int)problem_.getLowerLimit(var),
-                    (int)problem_.getUpperLimit(var));
+        for (int var = permutationVariables_; var < (permutationVariables_ + arrayIntVariables_); var++)
+            variables[var] = new ArrayInt(problem_.getLength(var), problem_);
 
         return variables;
     }   // createVariables

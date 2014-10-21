@@ -3,7 +3,7 @@ package jmetal.problems;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
-import jmetal.encodings.solutionType.PermutationIntSolutionType;
+import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.JMException;
 
@@ -56,8 +56,8 @@ public class TTP extends Problem {
         length_      [0] = numberOfNodes ;
         length_      [1] = numberOfItems;
 
-        if (solutionType.compareTo("PermutationInt") == 0)
-            solutionType_ = new PermutationIntSolutionType(this, 1, 1) ;
+        if (solutionType.compareTo("PermutationArrayInt") == 0)
+            solutionType_ = new PermutationArrayIntSolutionType(this, 1, 1) ;
         else {
             System.out.println("Error: solution type " + solutionType + " invalid") ;
             System.exit(-1) ;
