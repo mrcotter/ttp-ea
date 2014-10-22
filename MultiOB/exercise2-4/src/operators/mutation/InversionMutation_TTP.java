@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class implements a swap mutation for TTP.
+ * This class implements a inversion mutation for TTP.
  * NOTE: the operator is applied to the first encodings.variable of the solutions.
  * The solution type of the solution must be PermutationArrayInt.
  */
@@ -98,6 +98,5 @@ public class InversionMutation_TTP extends Mutation {
         this.doMutation(mutationProbability_, solution);
         return solution;
     }
-
 
 }
