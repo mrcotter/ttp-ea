@@ -151,8 +151,9 @@ public class TTP extends Problem {
     private long[][] readProblem(String fileName) throws IOException {
 
         long[][] matrix;
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                new FileInputStream(fileName)));
+
+        File file = new File("instances/" + fileName);
+        BufferedReader br = new BufferedReader(new FileReader(file));
 
         try {
             String line;

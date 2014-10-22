@@ -53,11 +53,11 @@ public class NSGAII_TTP_main {
         QualityIndicator indicators ; // Object to get quality indicators
 
         // Logger object and file to store log messages
-        logger_      = Configuration.logger_ ;
+        logger_      = Configuration.logger_;
         fileHandler_ = new FileHandler("NSGAII_main.log");
-        logger_.addHandler(fileHandler_) ;
+        logger_.addHandler(fileHandler_);
 
-        indicators = null ;
+        indicators = null;
 
         if (args.length == 0) {
             problem = new TTP("PermutationArrayInt", "a280_n279_bounded-strongly-corr_01.ttp");
@@ -80,7 +80,46 @@ public class NSGAII_TTP_main {
         parameters.put("probability", 0.95) ;
         crossover = CrossoverFactory.getCrossoverOperator("PMXCrossover_TTP", parameters);
 
+        /* Mutation operator */
+        parameters = new HashMap() ;
+        parameters.put("probability", 0.3) ;
+        mutation = MutationFactory.getMutationOperator("Mutation_TTP", parameters);
 
+        /* Selection Operator */
+        parameters = null;
+        selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
+
+        // Add the operators to the algorithm
+        algorithm.addOperator("crossover", crossover);
+        algorithm.addOperator("mutation", mutation);
+        algorithm.addOperator("selection", selection);
+
+        // Add the indicator object to the algorithm
+        algorithm.setInputParameter("indicators", indicators);
+
+        // Execute the Algorithm
+        long initTime = System.currentTimeMillis();
+        SolutionSet population = algorithm.execute();
+        long estimatedTime = System.currentTimeMillis() - initTime;
+
+        // Result messages
+        logger_.info("Total execution time: "+estimatedTime + "ms");
+        logger_.info("Variables values have been writen to file VAR");
+        population.printVariablesToFile("VAR");
+        logger_.info("Objectives values have been writen to file FUN");
+        population.printObjectivesToFile("FUN");
+
+        if (indicators != null) {
+            logger_.info("Quality indicators");
+            logger_.info("Hypervolume: " + indicators.getHypervolume(population));
+            logger_.info("GD         : " + indicators.getGD(population));
+            logger_.info("IGD        : " + indicators.getIGD(population));
+            logger_.info("Spread     : " + indicators.getSpread(population));
+            logger_.info("Epsilon    : " + indicators.getEpsilon(population));
+
+            int evaluations = ((Integer) algorithm.getOutputParameter("evaluations")).intValue();
+            logger_.info("Speed      : " + evaluations + " evaluations");
+        }
 
     }
 }
