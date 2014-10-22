@@ -70,8 +70,8 @@ public class NSGAII_TTP_main {
         algorithm = new NSGAII(problem);
 
         // Algorithm parameters
-        algorithm.setInputParameter("populationSize",10);
-        algorithm.setInputParameter("maxEvaluations",100000);
+        algorithm.setInputParameter("populationSize",100);
+        algorithm.setInputParameter("maxEvaluations",1000000);
 
         /* Crossver operator */
         parameters = new HashMap() ;
@@ -80,7 +80,7 @@ public class NSGAII_TTP_main {
 
         /* Mutation operator */
         parameters = new HashMap() ;
-        parameters.put("probability", 0.3) ;
+        parameters.put("probability", 1.0) ;
         mutation = MutationFactory.getMutationOperator("Mutation_TTP", parameters);
 
         /* Selection Operator */
