@@ -75,12 +75,12 @@ public class NSGAII_TTP_main {
 
         /* Crossver operator */
         parameters = new HashMap() ;
-        parameters.put("probability", 0.95) ;
+        parameters.put("probability", 0.5) ;
         crossover = CrossoverFactory.getCrossoverOperator("PMXCrossover_TTP", parameters);
 
         /* Mutation operator */
         parameters = new HashMap() ;
-        parameters.put("probability", 1.0) ;
+        parameters.put("probability", 0.2) ;
         mutation = MutationFactory.getMutationOperator("Mutation_TTP", parameters);
 
         /* Selection Operator */

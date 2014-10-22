@@ -27,6 +27,9 @@ public class TTP extends Problem {
     public double[][]  nodes;
     public int[][]     items;
 
+    public double wend;
+    public double wendUsed;
+
     public long [][] distanceMatrix_;
 
     /**
@@ -36,7 +39,7 @@ public class TTP extends Problem {
     public TTP(String solutionType, String fileName) throws IOException {
         numberOfVariables_  = 2;
         numberOfObjectives_ = 2;
-        numberOfConstraints_= 0;
+        numberOfConstraints_= 1;
         problemName_        = "TTP";
 
         length_ = new int[numberOfVariables_];
@@ -160,10 +163,36 @@ public class TTP extends Problem {
             }
         }
 
+        wendUsed = wc;
+        wend = capacityOfKnapsack - wc;
         fitness2_ob = fp - ft * rentingRatio;
 
         solution.setObjective(0, fitness1_td);
         solution.setObjective(1, -fitness2_ob); // Convert from maximum objective value to minimum objective value
+    }
+
+
+    /**
+     * Evaluates the constraint overhead of a solution
+     * @param solution The solution
+     * @throws JMException
+     */
+    public void evaluateConstraints(Solution solution) throws JMException {
+        double [] constraint = new double[this.getNumberOfConstraints()];
+
+        constraint[0] = wend;
+
+        double total = 0.0;
+        int number = 0;
+        for (int i = 0; i < this.getNumberOfConstraints(); i++) {
+            if (constraint[i] < 0.0) {
+                total += constraint[i];
+                number++;
+            }
+        }
+
+        solution.setOverallConstraintViolation(total);
+        solution.setNumberOfViolatedConstraint(number);
     }
 
 
