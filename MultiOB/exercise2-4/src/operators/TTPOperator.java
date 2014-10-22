@@ -5,6 +5,7 @@ import jmetal.core.Solution;
 
 import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
 import jmetal.encodings.solutionType.PermutationSolutionType;
+import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
@@ -61,8 +62,6 @@ public class TTPOperator extends Operator {
                     parents[1].getType() + " are obtained");
         }
 
-        Double crossoverProbability = (Double) getParameter("probability");
-
         if (parents.length < 2) {
             Configuration.logger_.severe("TTPOperator.execute: operator needs two " +
                     "parents");
@@ -72,7 +71,7 @@ public class TTPOperator extends Operator {
         }
 
         // First apply pmx crossover operator only to Variable[0] - TSP
-        Solution[] offspring = doPMXCrossover(crossoverProbability.doubleValue(),
+        Solution[] offspring = doPMXCrossover(crossoverProbability_.doubleValue(),
                 parents[0],
                 parents[1]);
 
@@ -80,38 +79,43 @@ public class TTPOperator extends Operator {
         doSwapMutation(mutationProbability_.doubleValue(), offspring[0]);
         doSwapMutation(mutationProbability_.doubleValue(), offspring[1]);
 
-        // Finally apply bitflip mutation operator only to Variable[1] - Packing Plan
-        doBitFlipMutation(mutationProbability_.doubleValue(), offspring[0]);
-        doBitFlipMutation(mutationProbability_.doubleValue(), offspring[1]);
+        // Finally apply bit flip only to Variable[1] - Packing Plan
+        doBitFlip(offspring[0]);
+        doBitFlip(offspring[1]);
 
         return offspring;
     }
 
     /**
-     * Perform the bit flip mutation operation
-     * @param probability Mutation probability
+     * Perform the bit flip with probability 1/n
      * @param solution The solution to mutate
      * @throws JMException
      */
-    private void doBitFlipMutation(double probability, Solution solution) throws JMException {
+    private void doBitFlip(Solution solution) throws JMException {
+
+        int length = ((ArrayInt) solution.getDecisionVariables()[1]).getLength();
+        double probability = 1d / length;
 
         try {
-            // Integer representation
-            if (PseudoRandom.randDouble() < probability) {
+            // ArrayInt representation
+            for (int i = 0; i < length; i++) {
+                if (PseudoRandom.randDouble() < probability) {
+                    int value = ((ArrayInt) solution.getDecisionVariables()[1]).getValue(i);
 
-                int value = PseudoRandom.randInt(
-                    (int)solution.getDecisionVariables()[1].getLowerBound(),
-                    (int)solution.getDecisionVariables()[1].getUpperBound());
-
-                solution.getDecisionVariables()[1].setValue(value);
+                    if (value == 1) {
+                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 0);
+                    } else {
+                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 1);
+                    }
+                }
             }
 
         } catch (ClassCastException e1) {
-            Configuration.logger_.severe("BitFlipMutation.doMutation: " +
+            Configuration.logger_.severe("doBitFlip: " +
                     "ClassCastException error" + e1.getMessage());
             Class cls = java.lang.String.class;
             String name = cls.getName();
-            throw new JMException("Exception in " + name + ".doMutation()");
+            throw new JMException("Exception in " + name + ".doBitFlip()");
         }
     }
 
@@ -125,7 +129,7 @@ public class TTPOperator extends Operator {
 
         int permutation[] ;
         int permutationLength ;
-        if (solution.getType().getClass() == PermutationSolutionType.class) {
+        if (solution.getType().getClass() == PermutationArrayIntSolutionType.class) {
 
             permutationLength = ((Permutation)solution.getDecisionVariables()[0]).getLength() ;
             permutation = ((Permutation)solution.getDecisionVariables()[0]).vector_ ;
