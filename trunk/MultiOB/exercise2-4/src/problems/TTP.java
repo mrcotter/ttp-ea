@@ -2,8 +2,8 @@ package jmetal.problems;
 
 import jmetal.core.Problem;
 import jmetal.core.Solution;
-import jmetal.core.Variable;
 import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
+import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.JMException;
 
@@ -87,7 +87,7 @@ public class TTP extends Problem {
 
             fitness1_td += distanceMatrix_[x][y];
         }
-        // Generate tour with same start city and end city
+        // Repair - generate tour with same start city and end city
         tour[numberOfNodes] = tour[0];
 
         fitness1_td += distanceMatrix_[firstCity][lastCity];
@@ -101,11 +101,7 @@ public class TTP extends Problem {
 
 
         // Calculate fitness 2 - objective value of a given tour
-        Variable variable = solution.getDecisionVariables()[1];
-        int[] z = new int[numberOfItems];
-        for (int i = 0; i < numberOfItems; i++) {
-            z[i] = (int) variable.getValue();
-        }
+        ArrayInt z = (ArrayInt) solution.getDecisionVariables()[1];
 
         double fitness2_ob;
         double wc = 0.0;
@@ -113,7 +109,7 @@ public class TTP extends Problem {
         double fp = 0.0;
 
         //the following is used for a different interpretation of "packingPlan"
-        int itemsPerCity = z.length / (tour.length - 2);
+        int itemsPerCity = z.getLength() / (tour.length - 2);
 
         for (int i = 0; i < tour.length - 1; i++) {
 
@@ -128,7 +124,7 @@ public class TTP extends Problem {
                     // what is the next item's index in items-array?
                     int itemIndex = currentCity + itemNumber * (numberOfNodes - 1);
 
-                    if (z[indexOfPackingPlan] == 1) {
+                    if (z.getValue(indexOfPackingPlan) == 1) {
                         // pack item
                         int currentWC = items[itemIndex][2];
                         wc += currentWC;
