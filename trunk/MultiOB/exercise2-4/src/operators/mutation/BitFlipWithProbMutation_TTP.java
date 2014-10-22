@@ -42,10 +42,11 @@ public class BitFlipWithProbMutation_TTP extends Mutation {
      * @throws JMException
      */
     public void doMutation(double probability, Solution solution) throws JMException {
-        int length = ((ArrayInt) solution.getDecisionVariables()[1]).getLength();
-        double nProb = 1d / length;
 
         if (PseudoRandom.randDouble() < probability) {
+            int length = ((ArrayInt) solution.getDecisionVariables()[1]).getLength();
+            double nProb = 1d / length;
+
             // ArrayInt representation
             for (int i = 0; i < length; i++) {
                 if (PseudoRandom.randDouble() < nProb) {
