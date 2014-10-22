@@ -52,7 +52,7 @@ public class NSGAII_TTP_main {
 
         // Logger object and file to store log messages
         logger_      = Configuration.logger_;
-        fileHandler_ = new FileHandler("NSGAII_main.log");
+        fileHandler_ = new FileHandler("NSGAII_TTP_main.log");
         logger_.addHandler(fileHandler_);
 
         indicators = null;
