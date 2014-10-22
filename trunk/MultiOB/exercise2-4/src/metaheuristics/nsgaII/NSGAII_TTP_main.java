@@ -21,7 +21,6 @@ import java.util.logging.Logger;
  * Class to configure and execute the NSGA-II algorithm. It is aimed
  * at solving the TTP problem.
  */
-
 public class NSGAII_TTP_main {
     public static Logger      logger_ ;      // Logger object
     public static FileHandler fileHandler_ ; // FileHandler object
@@ -36,7 +35,6 @@ public class NSGAII_TTP_main {
      *      - jmetal.metaheuristics.nsgaII.NSGAII_TTP_main
      *      - jmetal.metaheuristics.nsgaII.NSGAII_TTP_main ttp_fileName
      */
-
     public static void main(String [] args) throws
                                     JMException,
                                     SecurityException,

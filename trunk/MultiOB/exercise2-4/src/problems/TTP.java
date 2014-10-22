@@ -87,7 +87,7 @@ public class TTP extends Problem {
 
             fitness1_td += distanceMatrix_[x][y];
         }
-        // Repair - generate tour with same start city and end city
+        // generate tour with same start city and end city
         tour[numberOfNodes] = tour[0];
 
         fitness1_td += distanceMatrix_[firstCity][lastCity];
