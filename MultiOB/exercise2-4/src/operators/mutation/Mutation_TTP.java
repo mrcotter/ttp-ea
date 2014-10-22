@@ -2,6 +2,7 @@ package jmetal.operators.mutation;
 
 import jmetal.core.Solution;
 import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
+import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
@@ -12,11 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class implements a inversion mutation for TTP.
- * NOTE: the operator is applied to the first encodings.variable of the solutions.
+ * This class implements a mutation for TTP.
+ * NOTE: the inversion mutation is applied to the first encodings.variable of the solutions,
+ * the bit flip with probability operation is applied to the second encodings.variable of the solutions.
  * The solution type of the solution must be PermutationArrayInt.
  */
-public class InversionMutation_TTP extends Mutation {
+public class Mutation_TTP extends Mutation {
 
     /**
      * Valid solution types to apply this operator
@@ -29,7 +31,7 @@ public class InversionMutation_TTP extends Mutation {
      * Constructor
      * @param parameters The parameters
      */
-    public InversionMutation_TTP(HashMap<String, Object> parameters) {
+    public Mutation_TTP(HashMap<String, Object> parameters) {
         super(parameters);
 
         if (parameters.get("probability") != null)
@@ -40,15 +42,17 @@ public class InversionMutation_TTP extends Mutation {
      * Performs the operation
      * @param probability Mutation probability
      * @param solution The solution to mutate
+     * @throws JMException
      */
-    public void doMutation(double probability, Solution solution) {
-        int permutation[];
-        int permutationLength;
-
-        permutationLength = ((Permutation)solution.getDecisionVariables()[0]).getLength();
-        permutation = ((Permutation)solution.getDecisionVariables()[0]).vector_;
-
+    public void doMutation(double probability, Solution solution) throws JMException {
+        // Inversion Mutation
         if (PseudoRandom.randDouble() < probability) {
+            int permutation[];
+            int permutationLength;
+
+            permutationLength = ((Permutation)solution.getDecisionVariables()[0]).getLength();
+            permutation = ((Permutation)solution.getDecisionVariables()[0]).vector_;
+
             int pos1 = PseudoRandom.randInt(0,permutationLength-1);
             int pos2 = PseudoRandom.randInt(0,permutationLength-1);
 
@@ -72,6 +76,25 @@ public class InversionMutation_TTP extends Mutation {
                 bigger_index--;
             }
         }
+
+        // Bit flip with probability 1/n
+        if (PseudoRandom.randDouble() < probability) {
+            int length = ((ArrayInt) solution.getDecisionVariables()[1]).getLength();
+            double nProb = 1d / length;
+
+            // ArrayInt representation
+            for (int i = 0; i < length; i++) {
+                if (PseudoRandom.randDouble() < nProb) {
+                    int value = ((ArrayInt) solution.getDecisionVariables()[1]).getValue(i);
+
+                    if (value == 1) {
+                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 0);
+                    } else {
+                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 1);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -85,7 +108,7 @@ public class InversionMutation_TTP extends Mutation {
         Solution solution = (Solution)object;
 
         if (!VALID_TYPES.contains(solution.getType().getClass())) {
-            Configuration.logger_.severe("InversionMutation_TTP.execute: the solution " +
+            Configuration.logger_.severe("Mutation_TTP.execute: the solution " +
                     "is not of the right type. The type should be PermutationArrayInt, but "
                     + solution.getType() + " is obtained");
 
