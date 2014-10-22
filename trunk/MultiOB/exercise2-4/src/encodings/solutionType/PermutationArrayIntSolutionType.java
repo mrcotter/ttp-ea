@@ -37,11 +37,16 @@ public class PermutationArrayIntSolutionType extends SolutionType {
     public Variable[] createVariables() throws ClassNotFoundException {
         Variable [] variables = new Variable[problem_.getNumberOfVariables()];
 
-        for (int var = 0; var < permutationVariables_; var++)
+        for (int var = 0; var < permutationVariables_; var++) {
+            //System.out.println("v0: " + var);
             variables[var] = new Permutation(problem_.getLength(var));
+        }
 
-        for (int var = permutationVariables_; var < (permutationVariables_ + arrayIntVariables_); var++)
+        for (int var = permutationVariables_; var < (permutationVariables_ + arrayIntVariables_); var++) {
+            //System.out.println("v1: " + var);
+            //System.out.println(problem_.getLength(var));
             variables[var] = new ArrayInt(problem_.getLength(var), problem_);
+        }
 
         return variables;
     }   // createVariables

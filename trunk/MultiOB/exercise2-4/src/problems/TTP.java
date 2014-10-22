@@ -39,22 +39,22 @@ public class TTP extends Problem {
         numberOfConstraints_= 0;
         problemName_        = "TTP";
 
-        upperLimit_ = new double[numberOfVariables_];
-        lowerLimit_ = new double[numberOfVariables_];
+        length_ = new int[numberOfVariables_];
 
-        for (int var = 0; var < numberOfVariables_; var++){
+        distanceMatrix_ = readProblem(fileName);
+
+        //System.out.println(numberOfNodes) ;
+        //System.out.println(numberOfItems) ;
+        length_[0] = numberOfNodes;
+        length_[1] = numberOfItems;
+
+        upperLimit_ = new double[numberOfItems];
+        lowerLimit_ = new double[numberOfItems];
+
+        for (int var = 0; var < numberOfItems; var++){
             lowerLimit_[var] = 0.0;
             upperLimit_[var] = 1.0;
         }
-
-        length_ = new int[numberOfVariables_];
-
-        distanceMatrix_ = readProblem(fileName) ;
-
-        System.out.println(numberOfNodes) ;
-        System.out.println(numberOfItems) ;
-        length_      [0] = numberOfNodes ;
-        length_      [1] = numberOfItems;
 
         if (solutionType.compareTo("PermutationArrayInt") == 0)
             solutionType_ = new PermutationArrayIntSolutionType(this, 1, 1) ;
@@ -99,9 +99,14 @@ public class TTP extends Problem {
             System.exit(1);
         }
 
+        /*for (int i = 0; i < tour.length; i++) {
+            System.out.print(tour[i] + " ");
+        }*/
+        //System.out.println("\n" + tour.length);
 
         // Calculate fitness 2 - objective value of a given tour
         ArrayInt z = (ArrayInt) solution.getDecisionVariables()[1];
+        //System.out.println(z.getLength());
 
         double fitness2_ob;
         double wc = 0.0;
@@ -110,6 +115,7 @@ public class TTP extends Problem {
 
         //the following is used for a different interpretation of "packingPlan"
         int itemsPerCity = z.getLength() / (tour.length - 2);
+        //System.out.println(itemsPerCity);
 
         for (int i = 0; i < tour.length - 1; i++) {
 
@@ -118,23 +124,36 @@ public class TTP extends Problem {
             int currentCity = currentCityTEMP - 1;
 
             if (i > 0) {
-                for (int itemNumber = 0; itemNumber < itemsPerCity; itemNumber++) {
 
-                    int indexOfPackingPlan = (i-1) * itemsPerCity + itemNumber;
-                    // what is the next item's index in items-array?
-                    int itemIndex = currentCity + itemNumber * (numberOfNodes - 1);
+                if (currentCity == -1) {
+                    // No items in city 1
+                    wc += 0.0;
+                    fp += 0.0;
 
-                    if (z.getValue(indexOfPackingPlan) == 1) {
-                        // pack item
-                        int currentWC = items[itemIndex][2];
-                        wc += currentWC;
+                } else {
 
-                        int currentFP = items[itemIndex][1];
-                        fp += currentFP;
+                    for (int itemNumber = 0; itemNumber < itemsPerCity; itemNumber++) {
+
+                        int indexOfPackingPlan = (i-1) * itemsPerCity + itemNumber;
+                        // what is the next item's index in items-array?
+                        int itemIndex = currentCity + itemNumber * (numberOfNodes - 1);
+                        //System.out.println("i: " + i);
+
+                        if (z.getValue(indexOfPackingPlan) == 1) {
+                            // pack item
+                            //System.out.println(itemIndex);
+                            int currentWC = items[itemIndex][2];
+                            wc += currentWC;
+
+                            int currentFP = items[itemIndex][1];
+                            fp += currentFP;
+                        }
                     }
+
                 }
 
                 int h = (i+1) % (tour.length-1); //h: next tour city index
+                //System.out.println("h: " + h);
                 long distance = distanceMatrix_[i][h];
                 // compute the adjusted (effective) distance
                 ft += (distance / (1 - wc * (maxSpeed - minSpeed) / capacityOfKnapsack));
