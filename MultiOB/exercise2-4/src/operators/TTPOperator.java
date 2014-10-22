@@ -4,7 +4,6 @@ import jmetal.core.Operator;
 import jmetal.core.Solution;
 
 import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
-import jmetal.encodings.solutionType.PermutationSolutionType;
 import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.Configuration;
@@ -111,7 +110,7 @@ public class TTPOperator extends Operator {
             }
 
         } catch (ClassCastException e1) {
-            Configuration.logger_.severe("doBitFlip: " +
+            Configuration.logger_.severe("TTPOperator.doBitFlip: " +
                     "ClassCastException error" + e1.getMessage());
             Class cls = java.lang.String.class;
             String name = cls.getName();
@@ -154,12 +153,12 @@ public class TTPOperator extends Operator {
             } // if
         } // if
         else  {
-            Configuration.logger_.severe("SwapMutation.doMutation: invalid type. " +
+            Configuration.logger_.severe("TTPOperator.doSwapMutation: invalid type. " +
                     ""+ solution.getDecisionVariables()[0].getVariableType());
 
             Class cls = java.lang.String.class;
             String name = cls.getName();
-            throw new JMException("Exception in " + name + ".doMutation()") ;
+            throw new JMException("Exception in " + name + ".doSwapMutation()") ;
         }
     }
 
