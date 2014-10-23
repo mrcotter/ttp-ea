@@ -58,7 +58,7 @@
 	<target name="nsgaii" depends="nsga-jar">
 		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
 		<java classname="${main-class-1}" fork="true">
-			<jvmarg value="-Xmx64m" />
+			<jvmarg value="-Xmx512m" />
 			<classpath>
 				<path refid="classpath" />
 				<path location="${jar-dir}/${jar-name}" />
@@ -82,7 +82,7 @@
 	<target name="spea2" depends="spea2-jar">
 		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
 		<java classname="${main-class-2}" fork="true">
-			<jvmarg value="-Xmx64m" />
+			<jvmarg value="-Xmx512m" />
 			<classpath>
 				<path refid="classpath" />
 				<path location="${jar-dir}/${jar-name}" />
@@ -106,7 +106,7 @@
 	<target name="ibea" depends="ibea-jar">
 		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
 		<java classname="${main-class-3}" fork="true">
-			<jvmarg value="-Xmx64m" />
+			<jvmarg value="-Xmx512m" />
 			<classpath>
 				<path refid="classpath" />
 				<path location="${jar-dir}/${jar-name}" />
