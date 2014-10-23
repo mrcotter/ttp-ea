@@ -2,22 +2,23 @@ package jmetal.operators.crossover;
 
 import jmetal.core.Solution;
 import jmetal.encodings.solutionType.PermutationArrayIntSolutionType;
+import jmetal.encodings.variable.ArrayInt;
 import jmetal.encodings.variable.Permutation;
 import jmetal.util.Configuration;
 import jmetal.util.JMException;
 import jmetal.util.PseudoRandom;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class allows to apply a PMX crossover operator for TTP
- * NOTE: the operator is applied to the first encodings.variable of the solutions, and
- * the type of those variables must be VariableType_.PermutationArrayInt.
+ * This class allows to apply a crossover operator for TTP
+ * The type of those variables must be VariableType_.PermutationArrayInt.
  */
 
-public class PMXCrossover_TTP extends Crossover {
+public class Crossover_TTP extends Crossover {
     /**
      * Valid solution types to apply this operator
      */
@@ -29,7 +30,7 @@ public class PMXCrossover_TTP extends Crossover {
      * Constructor
      * @param parameters The parameters
      */
-    public PMXCrossover_TTP(HashMap<String, Object> parameters) {
+    public Crossover_TTP(HashMap<String, Object> parameters) {
         super(parameters);
 
         if (parameters.get("probability") != null)
@@ -43,15 +44,17 @@ public class PMXCrossover_TTP extends Crossover {
      * @param probability Crossover probability
      * @param parent1     The first parent
      * @param parent2     The second parent
+     * @throws JMException
      * @return An array containing the two offsprings
      */
     public Solution[] doCrossover(double probability, Solution parent1,
-                                  Solution parent2) {
+                                  Solution parent2) throws JMException {
         Solution[] offspring = new Solution[2];
 
         offspring[0] = new Solution(parent1);
         offspring[1] = new Solution(parent2);
 
+        // PMX Crossover on Variable[0]
         int permutationLength;
 
         permutationLength = ((Permutation) parent1.getDecisionVariables()[0]).getLength();
@@ -116,9 +119,54 @@ public class PMXCrossover_TTP extends Crossover {
             } // for
         } // if
 
+
+        // Order Crossover on Variable[1]
+        int packingLength;
+
+        packingLength = ((ArrayInt) parent1.getDecisionVariables()[1]).getLength();
+
+        int parentPacking1[] = ((ArrayInt) parent1.getDecisionVariables()[1]).array_;
+        int parentPacking2[] = ((ArrayInt) parent2.getDecisionVariables()[1]).array_;
+        int offspringPacking1[] = ((ArrayInt) offspring[0].getDecisionVariables()[1]).array_;
+        int offspringPacking2[] = ((ArrayInt) offspring[1].getDecisionVariables()[1]).array_;
+
+        if (PseudoRandom.randDouble() < probability) {
+            int cuttingPoint1;
+            int cuttingPoint2;
+
+            cuttingPoint1 = PseudoRandom.randInt(0, packingLength - 1);
+            cuttingPoint2 = PseudoRandom.randInt(0, packingLength - 1);
+            while (cuttingPoint2 == cuttingPoint1)
+                cuttingPoint2 = PseudoRandom.randInt(0, packingLength - 1);
+
+            if (cuttingPoint1 > cuttingPoint2) {
+                int swap;
+                swap = cuttingPoint1;
+                cuttingPoint1 = cuttingPoint2;
+                cuttingPoint2 = swap;
+            }
+
+            //Do order procedure
+            int currentIndex;
+            int currentValuePlan1, currentValuePlan2;
+
+            for (int i = 0; i < packingLength; i++) {
+                currentIndex = (cuttingPoint2 + i) % packingLength;
+
+                currentValuePlan1 = parentPacking1[currentIndex];
+                currentValuePlan2 = parentPacking2[currentIndex];
+
+                offspringPacking1[i] = currentValuePlan2;
+                offspringPacking2[i] = currentValuePlan1;
+            }
+
+            //Rotate the array so that the elements are in the right place
+            Collections.rotate(Arrays.asList(offspringPacking1), cuttingPoint1);
+            Collections.rotate(Arrays.asList(offspringPacking2), cuttingPoint1);
+        }
+
         return offspring;
     }
-
 
     /**
      * Executes the operation
