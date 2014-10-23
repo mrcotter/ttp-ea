@@ -43,9 +43,10 @@ public class PMXCrossover_TTP extends Crossover {
      * @param probability Crossover probability
      * @param parent1     The first parent
      * @param parent2     The second parent
-     * @return An array containig the two offsprings
+     * @return An array containing the two offsprings
      */
-    public Solution[] doCrossover(double probability, Solution parent1, Solution parent2) {
+    public Solution[] doCrossover(double probability, Solution parent1,
+                                  Solution parent2) {
         Solution[] offspring = new Solution[2];
 
         offspring[0] = new Solution(parent1);
