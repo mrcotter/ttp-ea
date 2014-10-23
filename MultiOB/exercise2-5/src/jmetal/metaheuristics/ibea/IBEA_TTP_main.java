@@ -19,7 +19,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 /**
- * Class for configuring and running the DENSEA algorithm
+ * Class for configuring and running the IBEA algorithm
  * It is aimed at solving the TTP problem.
  */
 public class IBEA_TTP_main {
@@ -32,8 +32,8 @@ public class IBEA_TTP_main {
      * @throws IOException
      * @throws SecurityException
      * Usage: three choices
-     *      - jmetal.metaheuristics.nsgaII.NSGAII_main
-     *      - jmetal.metaheuristics.nsgaII.NSGAII_main ttp_fileName
+     *      - jmetal.metaheuristics.ibea.IBEA_TTP_main
+     *      - jmetal.metaheuristics.ibea.IBEA_TTP_main ttp_fileName
      */
     public static void main(String [] args) throws JMException, IOException, ClassNotFoundException {
         Problem   problem = null ;         // The problem to solve

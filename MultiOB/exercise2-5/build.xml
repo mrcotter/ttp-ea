@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TTP_MuiltiOB" default="all">
+<project name="TTP_MuiltiOB" default="nsgaii">
 
     <!-- set properties for this build -->
 	<property name="build-dir" value="build" />
 	<property name="jar-dir" value="${build-dir}/jar/" />
 	<property name="src-dir" location="src" />
 	<property name="lib-dir" location="lib" />
-	<property name="main-class" value="jmetal.metaheuristics.nsgaII.NSGAII_TTP_main" />
-	<property name="jar-name" value="NSGAII_TTP.jar" />
+	<property name="main-class-1" value="jmetal.metaheuristics.nsgaII.NSGAII_TTP_main" />
+	<property name="main-class-2" value="jmetal.metaheuristics.spea2.SPEA2_TTP_main" />
+	<property name="main-class-3" value="jmetal.metaheuristics.ibea.IBEA_TTP_main" />
+	<property name="jar-name" value="META_TTP.jar" />
 
 	<path id="classpath">
 		<fileset dir="${lib-dir}" includes="**/*.jar" />
@@ -37,25 +39,25 @@
 		</delete>
 	</target>
 
-    <target name="jar" depends="compile, clean-jar" description="Create JAR file ">
+	<target name="clean-jar">
+		<delete file="${jar-dir}/${jar-name}" />
+	</target>
+
+    <target name="nsga-jar" depends="compile, clean-jar" description="Create JAR file ">
 		<manifestclasspath property="jar.classpath" jarfile="${jar-dir}/${jar-name}">
 			<classpath refid="classpath" />
 		</manifestclasspath>
 		<jar destfile="${jar-dir}/${jar-name}" basedir="${build-dir}">
 			<manifest>
-				<attribute name="Main-Class" value="${main-class}" />
+				<attribute name="Main-Class" value="${main-class-1}" />
 				<attribute name="Class-Path" value="${jar.classpath}" />
 			</manifest>
 		</jar>
 	</target>
-	
-	<target name="clean-jar">
-		<delete file="${jar-dir}/${jar-name}" />
-	</target>
-	
-	<target name="run" depends="jar">
+		
+	<target name="nsgaii" depends="nsga-jar">
 		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
-		<java classname="${main-class}" fork="true">
+		<java classname="${main-class-1}" fork="true">
 			<jvmarg value="-Xmx64m" />
 			<classpath>
 				<path refid="classpath" />
@@ -65,7 +67,54 @@
 		</java>
 	</target>
 
-	<target name="all" depends="run" />
+	<target name="spea2-jar" depends="compile, clean-jar" description="Create JAR file ">
+		<manifestclasspath property="jar.classpath" jarfile="${jar-dir}/${jar-name}">
+			<classpath refid="classpath" />
+		</manifestclasspath>
+		<jar destfile="${jar-dir}/${jar-name}" basedir="${build-dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class-2}" />
+				<attribute name="Class-Path" value="${jar.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="spea2" depends="spea2-jar">
+		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
+		<java classname="${main-class-2}" fork="true">
+			<jvmarg value="-Xmx64m" />
+			<classpath>
+				<path refid="classpath" />
+				<path location="${jar-dir}/${jar-name}" />
+			</classpath>
+			<arg value = "${arg0}" />
+		</java>
+	</target>
+
+	<target name="ibea-jar" depends="compile, clean-jar" description="Create JAR file ">
+		<manifestclasspath property="jar.classpath" jarfile="${jar-dir}/${jar-name}">
+			<classpath refid="classpath" />
+		</manifestclasspath>
+		<jar destfile="${jar-dir}/${jar-name}" basedir="${build-dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class-3}" />
+				<attribute name="Class-Path" value="${jar.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="ibea" depends="ibea-jar">
+		<property name="arg0" value="a280_n279_bounded-strongly-corr_01.ttp" />
+		<java classname="${main-class-3}" fork="true">
+			<jvmarg value="-Xmx64m" />
+			<classpath>
+				<path refid="classpath" />
+				<path location="${jar-dir}/${jar-name}" />
+			</classpath>
+			<arg value = "${arg0}" />
+		</java>
+	</target>
+
 	<target name="clean" depends="clean-init" description="Clean all ">
 		<delete file="FUN" />
 		<delete file="FUN_NSGAII" />
