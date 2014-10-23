@@ -7,7 +7,6 @@ import jmetal.core.SolutionSet;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.BinaryTournament;
-import jmetal.operators.selection.SelectionFactory;
 import jmetal.problems.TTP;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.Configuration;
