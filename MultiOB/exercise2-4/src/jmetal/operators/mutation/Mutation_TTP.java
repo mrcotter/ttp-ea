@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * This class implements a mutation for TTP.
- * NOTE: the inversion mutation is applied to the first encodings.variable of the solutions,
+ * NOTE: the inversion mutation is applied to the first and second encodings.variable of the solutions,
  * the bit flip with probability operation is applied to the second encodings.variable of the solutions.
  * The solution type of the solution must be PermutationArrayInt.
  */
@@ -45,7 +45,7 @@ public class Mutation_TTP extends Mutation {
      * @throws JMException
      */
     public void doMutation(double probability, Solution solution) throws JMException {
-        // Inversion Mutation
+        // Inversion Mutation for Variable[0]
         if (PseudoRandom.randDouble() < probability) {
             int permutation[];
             int permutationLength;
@@ -53,8 +53,8 @@ public class Mutation_TTP extends Mutation {
             permutationLength = ((Permutation)solution.getDecisionVariables()[0]).getLength();
             permutation = ((Permutation)solution.getDecisionVariables()[0]).vector_;
 
-            int pos1 = PseudoRandom.randInt(0,permutationLength-1);
-            int pos2 = PseudoRandom.randInt(0,permutationLength-1);
+            int pos1 = PseudoRandom.randInt(0, permutationLength-1);
+            int pos2 = PseudoRandom.randInt(0, permutationLength-1);
 
             while (pos1 == pos2) {
                 if (pos1 == (permutationLength - 1))
@@ -78,23 +78,50 @@ public class Mutation_TTP extends Mutation {
         }
 
         // Bit flip with probability 1/n
-        if (PseudoRandom.randDouble() < probability) {
-            int length = ((ArrayInt) solution.getDecisionVariables()[1]).getLength();
-            double nProb = 1d / length;
+        ArrayInt packingPlan = (ArrayInt) solution.getDecisionVariables()[1];
+        int packingLength = packingPlan.getLength();
 
-            // ArrayInt representation
-            for (int i = 0; i < length; i++) {
-                if (PseudoRandom.randDouble() < nProb) {
-                    int value = ((ArrayInt) solution.getDecisionVariables()[1]).getValue(i);
+        double nProb = 1d / packingLength;
+        // ArrayInt representation
+        for (int i = 0; i < packingLength; i++) {
+            if (PseudoRandom.randDouble() < nProb) {
+                int value = ((ArrayInt) solution.getDecisionVariables()[1]).getValue(i);
 
-                    if (value == 1) {
-                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 0);
-                    } else {
-                        ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 1);
-                    }
+                if (value == 1) {
+                    ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 0);
+                } else {
+                    ((ArrayInt) solution.getDecisionVariables()[1]).setValue(i, 1);
                 }
             }
         }
+
+        // Inversion Mutation for Variable[1]
+        if (PseudoRandom.randDouble() < probability) {
+
+            int pos1 = PseudoRandom.randInt(0, packingLength-1);
+            int pos2 = PseudoRandom.randInt(0, packingLength-1);
+
+            while (pos1 == pos2) {
+                if (pos1 == (packingLength - 1))
+                    pos2 = PseudoRandom.randInt(0, packingLength - 2);
+                else
+                    pos2 = PseudoRandom.randInt(pos1, packingLength - 1);
+            }
+
+            int lower_index = Math.min(pos1, pos2);
+            int bigger_index = Math.max(pos1, pos2);
+
+            //Do invert the sub section among these two indices
+            while (lower_index <= bigger_index) {
+                int temp = packingPlan.getValue(lower_index);
+                packingPlan.setValue(lower_index, packingPlan.getValue(bigger_index));
+                packingPlan.setValue(bigger_index, temp);
+
+                lower_index++;
+                bigger_index--;
+            }
+        }
+
     }
 
     /**

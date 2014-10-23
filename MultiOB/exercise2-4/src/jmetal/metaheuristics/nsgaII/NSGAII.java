@@ -96,12 +96,12 @@ public class NSGAII extends Algorithm {
       problem_.evaluateConstraints(newSolution);
       evaluations++;
       population.add(newSolution);
-    } //for       
+    } //for
 
-    // Generations 
+    // Generations
     while (evaluations < maxEvaluations) {
 
-      // Create the offSpring solutionSet      
+      // Create the offSpring solutionSet
       offspringPopulation = new SolutionSet(populationSize);
       Solution[] parents = new Solution[2];
       for (int i = 0; i < (populationSize / 2); i++) {
