@@ -70,8 +70,8 @@ public class NSGAII_TTP_main {
         algorithm = new NSGAII(problem);
 
         // Algorithm parameters
-        algorithm.setInputParameter("populationSize",10);
-        algorithm.setInputParameter("maxEvaluations",10000);
+        algorithm.setInputParameter("populationSize",100);
+        algorithm.setInputParameter("maxEvaluations",1000000);
 
         /* Crossver operator */
         parameters = new HashMap() ;

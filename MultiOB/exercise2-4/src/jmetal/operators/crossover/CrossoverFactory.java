@@ -52,7 +52,7 @@ public class CrossoverFactory {
     else if (name.equalsIgnoreCase("BLXAlphaCrossover"))
       return new BLXAlphaCrossover(parameters);
     else if (name.equalsIgnoreCase("PMXCrossover_TTP"))
-        return new PMXCrossover_TTP(parameters);
+        return new Crossover_TTP(parameters);
     else {
       Configuration.logger_.severe("CrossoverFactory.getCrossoverOperator. " +
           "Operator '" + name + "' not found ");
