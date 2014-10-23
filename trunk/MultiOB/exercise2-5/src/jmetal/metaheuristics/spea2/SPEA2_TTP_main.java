@@ -33,8 +33,8 @@ public class SPEA2_TTP_main {
      * @throws IOException
      * @throws SecurityException
      * Usage: three options
-     *      - jmetal.metaheuristics.mocell.MOCell_main
-     *      - jmetal.metaheuristics.mocell.MOCell_main ttp_fileName
+     *      - jmetal.metaheuristics.spea2.SPEA2_TTP_main
+     *      - jmetal.metaheuristics.spea2.SPEA2_TTP_main ttp_fileName
      */
     public static void main(String [] args) throws JMException, IOException, ClassNotFoundException {
         Problem   problem = null ;         // The problem to solve
