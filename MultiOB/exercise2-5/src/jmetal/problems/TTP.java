@@ -30,7 +30,7 @@ public class TTP extends Problem {
     public double wend;
     public double wendUsed;
 
-    public long [][] distanceMatrix_;
+    //public long [][] distanceMatrix_;
 
     /**
      * Creates a new TTP problem instance. It accepts data files from a ttp file
@@ -44,7 +44,8 @@ public class TTP extends Problem {
 
         length_ = new int[numberOfVariables_];
 
-        distanceMatrix_ = readProblem(fileName);
+        //distanceMatrix_ = readProblem(fileName);
+        readProblem(fileName);
 
         //System.out.println(numberOfNodes) ;
         //System.out.println(numberOfItems) ;
@@ -88,12 +89,12 @@ public class TTP extends Problem {
             tour[i] = x;
             tour[i+1] = y;
 
-            fitness1_td += distanceMatrix_[x][y];
+            fitness1_td += calDistances(x, y);
         }
         // generate tour with same start city and end city
         tour[numberOfNodes] = tour[0];
 
-        fitness1_td += distanceMatrix_[firstCity][lastCity];
+        fitness1_td += calDistances(firstCity, lastCity);
 
 
         // Correctness check: does the tour start and end in the same city
@@ -157,7 +158,7 @@ public class TTP extends Problem {
 
                 int h = (i+1) % (tour.length-1); //h: next tour city index
                 //System.out.println("h: " + h);
-                long distance = distanceMatrix_[i][h];
+                long distance = calDistances(i, h);
                 // compute the adjusted (effective) distance
                 ft += (distance / (1 - wc * (maxSpeed - minSpeed) / capacityOfKnapsack));
             }
@@ -196,9 +197,21 @@ public class TTP extends Problem {
     }
 
 
-    private long[][] readProblem(String fileName) throws IOException {
+    private long calDistances(int i, int j) {
 
-        long[][] matrix;
+        double result = (this.nodes[i][1]-this.nodes[j][1]) *
+                        (this.nodes[i][1]-this.nodes[j][1]) +
+                        (this.nodes[i][2]-this.nodes[j][2]) *
+                        (this.nodes[i][2]-this.nodes[j][2]);
+
+        return (long) Math.ceil(Math.sqrt(result));
+    }
+
+
+
+    private void readProblem(String fileName) throws IOException {
+
+        //long[][] matrix;
 
         File file = new File("instances/" + fileName);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -287,7 +300,7 @@ public class TTP extends Problem {
             System.exit(1);
         }
 
-        double dist;
+        /*double dist;
         long distance;
         matrix = new long[numberOfNodes][numberOfNodes];
 
@@ -303,8 +316,7 @@ public class TTP extends Problem {
                 matrix[i][j] = distance;
                 matrix[j][i] = distance;
             }
-        }
+        }*/
 
-        return matrix;
     }
 }

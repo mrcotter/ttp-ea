@@ -65,9 +65,9 @@ public class IBEA_TTP_main {
         algorithm = new IBEA(problem);
 
         // Algorithm parameters
-        algorithm.setInputParameter("populationSize",100);
+        algorithm.setInputParameter("populationSize",20);
         algorithm.setInputParameter("archiveSize",100);
-        algorithm.setInputParameter("maxEvaluations",1000000);
+        algorithm.setInputParameter("maxEvaluations",200000);
 
         /* Crossver operator */
         parameters = new HashMap() ;
