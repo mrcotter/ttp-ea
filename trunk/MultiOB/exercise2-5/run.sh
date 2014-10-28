@@ -21,10 +21,10 @@ if [ $# -eq 0 ]
 	#ant nsgaii -Darg0="pla33810_n33809_bounded-strongly-corr_01.ttp"
 
   else
-  	ant $1 -Darg0="a280_n279_bounded-strongly-corr_01.ttp"
+  	#ant $1 -Darg0="a280_n279_bounded-strongly-corr_01.ttp"
 	#ant $1 -Darg0="a280_n1395_uncorr-similar-weights_05.ttp"
 	#ant $1 -Darg0="a280_n2790_uncorr_10.ttp"
 	#ant $1 -Darg0="fnl4461_n4460_bounded-strongly-corr_01.ttp"
-	#ant $1 -Darg0="pla33810_n33809_bounded-strongly-corr_01.ttp"
+	ant $1 -Darg0="pla33810_n33809_bounded-strongly-corr_01.ttp"
 fi
 
