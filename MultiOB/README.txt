@@ -12,6 +12,19 @@ Open terminal, and type this command to anonymously check out the latest project
 
 There are three folders (exercise1, exercise2-5, document) in the root folder, exercise1 and exercise2-5 folders containing complete set of code to be compiled while document folder contains the plots of the final populations and its corresponding interpretations file.
 
+###File add new
+package jmetal.encodings.solutionType/PermutationArrayIntSolutionType
+package jmetal.metaheuristics.ibea/IBEA_TTP_main
+package jmetal.metaheuristics.nsgaII/NSGAII_TTP_main
+package jmetal.metaheuristics.spea2/SPEA2_TTP_main
+package jmetal.operators.crossover/Crossover_TTP
+package jmetal.operators.mutation/Mutation_TTP
+package jmetal.problems/TTP
+
+###File modified
+package jmetal.operators.crossover/CrossoverFactory
+package jmetal.operators.mutation/MutationFactory
+
 ###run.sh file
 run.sh file in each exercise folder contains parameters about how the test will be carried out, including:
 
